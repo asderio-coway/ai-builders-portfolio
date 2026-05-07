@@ -1,0 +1,1048 @@
+import { motion, useSpring, useScroll, useTransform, AnimatePresence, LayoutGroup } from "motion/react";
+import { useState, useEffect, useRef } from "react";
+import { ArrowRight, Menu, X, ArrowUpRight, CheckCircle2, Layout, Zap, Smartphone, BookOpen, Globe, MessageSquare, Search, Copy, Check, Mail } from "lucide-react";
+import { CATEGORIES, MEMBERS, PROJECTS, Project, Member } from "./data";
+import { SLIDE_STYLES, StyleItem } from "./styleData";
+
+// --- Components ---
+
+const CustomCursor = () => {
+  const [pos, setPos] = useState({ x: 0, y: 0 });
+  const [isHovering, setIsHovering] = useState(false);
+
+  useEffect(() => {
+    const handleMove = (e: MouseEvent) => setPos({ x: e.clientX, y: e.clientY });
+    const handleOver = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (target.closest('a, button, .hover-trigger')) setIsHovering(true);
+      else setIsHovering(false);
+    };
+
+    window.addEventListener("mousemove", handleMove);
+    window.addEventListener("mouseover", handleOver);
+    return () => {
+      window.removeEventListener("mousemove", handleMove);
+      window.removeEventListener("mouseover", handleOver);
+    };
+  }, []);
+
+  return (
+    <motion.div 
+      className="fixed top-0 left-0 w-6 h-6 bg-blue-500 rounded-full pointer-events-none z-[9999] mix-blend-difference hidden md:block"
+      animate={{ 
+        x: pos.x - 12, 
+        y: pos.y - 12,
+        scale: isHovering ? 2.5 : 1,
+      }}
+      transition={{ type: "spring", damping: 25, stiffness: 250, mass: 0.5 }}
+    />
+  );
+};
+
+const Navbar = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const { scrollY } = useScroll();
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    return scrollY.on("change", (latest) => setIsScrolled(latest > 50));
+  }, [scrollY]);
+
+  const navItems = [
+    { name: 'Member', id: 'members' },
+    { name: 'Assets', id: 'work' },
+    { name: 'Curriculum', id: 'curriculum' },
+    { name: 'Request', id: 'contact' }
+  ];
+
+  return (
+    <>
+      <nav className={`fixed top-0 left-0 w-full z-[100] transition-all duration-500 px-6 py-4 flex justify-between items-center ${isScrolled ? 'bg-black/40 backdrop-blur-xl border-b border-white/10' : ''}`}>
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20">
+            <Zap size={20} className="text-white fill-white" />
+          </div>
+          <div className="flex flex-col text-white">
+            <span className="font-black tracking-tighter text-lg uppercase leading-none">AI Builders</span>
+            <span className="text-[8px] uppercase tracking-[0.3em] font-bold opacity-50">Intelligence Hub</span>
+          </div>
+        </div>
+        
+        <div className="hidden md:flex gap-10 text-[10px] uppercase tracking-[0.3em] font-black text-white">
+          {navItems.map((item) => (
+            <a key={item.id} href={`#${item.id}`} className="relative group transition-colors hover:text-blue-400">
+              {item.name}
+              <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-blue-500 transition-all duration-300 group-hover:w-full" />
+            </a>
+          ))}
+        </div>
+
+        <button 
+          onClick={() => setIsOpen(true)}
+          className="w-10 h-10 flex flex-col items-center justify-center gap-1.5 group"
+        >
+          <div className="w-6 h-[2px] bg-white group-hover:w-8 transition-all" />
+          <div className="w-8 h-[2px] bg-white" />
+          <div className="w-4 h-[2px] bg-white group-hover:w-8 transition-all" />
+        </button>
+      </nav>
+
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div 
+            initial={{ opacity: 0, backdropFilter: "blur(0px)" }}
+            animate={{ opacity: 1, backdropFilter: "blur(40px)" }}
+            exit={{ opacity: 0, backdropFilter: "blur(0px)" }}
+            className="fixed inset-0 bg-black/80 z-[200] flex flex-col p-12"
+          >
+            <button onClick={() => setIsOpen(false)} className="self-end text-white p-4 hover:scale-110 transition-transform">
+              <X size={40} />
+            </button>
+            <div className="flex-1 flex flex-col justify-center gap-8 max-w-4xl mx-auto w-full">
+              {navItems.map((item, i) => (
+                <motion.a 
+                  key={item.id}
+                  initial={{ opacity: 0, x: -50 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.1 + 0.3 }}
+                  href={`#${item.id}`}
+                  onClick={() => setIsOpen(false)}
+                  className="text-6xl md:text-9xl font-black text-white hover:text-blue-500 transition-colors tracking-tighter flex items-center gap-6 group"
+                >
+                  <span className="text-2xl font-mono text-white/20 group-hover:text-blue-500/40">0{i+1}</span>
+                  {item.name}
+                </motion.a>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
+  );
+};
+
+const Hero = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [mouse, setMouse] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const handleMove = (e: MouseEvent) => {
+      const { innerWidth, innerHeight } = window;
+      setMouse({
+        x: (e.clientX / innerWidth - 0.5) * 2,
+        y: (e.clientY / innerHeight - 0.5) * 2
+      });
+    };
+    window.addEventListener("mousemove", handleMove);
+    return () => window.removeEventListener("mousemove", handleMove);
+  }, []);
+
+  const springX = useSpring(mouse.x * 20, { damping: 20, stiffness: 100 });
+  const springY = useSpring(mouse.y * -20, { damping: 20, stiffness: 100 });
+
+  return (
+    <section ref={containerRef} className="relative h-screen w-full bg-black flex items-center justify-center overflow-hidden">
+      {/* Background Neural Grid */}
+      <div className="absolute inset-0 opacity-20 pointer-events-none">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,#1e40af_0%,transparent_50%)]" />
+        <div className="grid h-full w-full grid-cols-12 gap-px bg-white/5">
+          {Array.from({ length: 144 }).map((_, i) => (
+            <div key={i} className="aspect-square border-r border-b border-white/5" />
+          ))}
+        </div>
+      </div>
+
+      <motion.div 
+        style={{ rotateX: springY, rotateY: springX, perspective: 1000 }}
+        className="relative z-10 text-center"
+      >
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1 }}
+        >
+          <span className="px-4 py-2 rounded-full border border-blue-500/30 bg-blue-500/10 text-blue-400 text-[10px] uppercase font-black tracking-[0.3em] mb-8 inline-block">
+            Coway Future Intelligence
+          </span>
+          <h1 className="text-[12vw] font-black leading-none tracking-tighter text-white uppercase drop-shadow-[0_0_30px_rgba(59,130,246,0.5)]">
+            AI BUILDERS
+          </h1>
+          <p className="text-lg md:text-2xl font-medium text-white/60 mt-6 max-w-2xl mx-auto tracking-tight">
+            Building the next generation of Coway with 
+            <span className="text-white italic"> 9 Architects of Intelligence.</span>
+          </p>
+        </motion.div>
+
+        <div className="mt-12 flex justify-center gap-6">
+          <a href="#work" className="px-8 py-4 bg-blue-600 text-white font-black uppercase tracking-widest rounded-xl hover:bg-blue-500 hover:scale-105 transition-all shadow-xl shadow-blue-500/40">
+            View Assets
+          </a>
+          <button className="px-8 py-4 bg-white/10 text-white font-black uppercase tracking-widest rounded-xl hover:bg-white/20 backdrop-blur-md transition-all border border-white/10">
+            Learn More
+          </button>
+        </div>
+      </motion.div>
+
+      {/* Floating UI Elements */}
+      <motion.div 
+        animate={{ y: [0, -20, 0], rotate: [0, 5, 0] }}
+        transition={{ duration: 6, repeat: Infinity }}
+        className="absolute top-1/4 right-[15%] hidden lg:block p-6 glass border border-white/10 rounded-2xl shadow-2xl text-white"
+      >
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse" />
+          <span className="text-[10px] uppercase font-bold tracking-widest opacity-50">Efficiency Bot</span>
+        </div>
+        <div className="space-y-2">
+          <div className="h-2 w-32 bg-white/20 rounded-full" />
+          <div className="h-2 w-24 bg-white/10 rounded-full" />
+        </div>
+      </motion.div>
+
+      <motion.div 
+        animate={{ y: [0, 20, 0], rotate: [0, -5, 0] }}
+        transition={{ duration: 8, repeat: Infinity }}
+        className="absolute bottom-1/4 left-[15%] hidden lg:block p-6 glass border border-white/10 rounded-2xl shadow-2xl text-white"
+      >
+        <div className="flex items-center gap-3 mb-4">
+          <Smartphone size={16} className="text-blue-400" />
+          <span className="text-[10px] uppercase font-bold tracking-widest opacity-50">IoCare+ AI</span>
+        </div>
+        <span className="text-xl font-black text-white">85% Match</span>
+      </motion.div>
+    </section>
+  );
+};
+
+const MemberCard = ({ member }: { member: Member }) => {
+  return (
+    <motion.div 
+      whileHover={{ y: -10 }}
+      className="group relative h-[450px] bg-white/5 border border-white/10 rounded-3xl overflow-hidden hover-trigger"
+    >
+      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent z-10" />
+      <div className="absolute inset-0 bg-blue-900/20 group-hover:bg-blue-600/20 transition-colors duration-500" />
+      
+      <div className="absolute top-8 left-8 z-20">
+        <span className="px-3 py-1 bg-blue-600 text-[10px] font-black uppercase tracking-widest rounded-full text-white">
+          {member.role}
+        </span>
+      </div>
+
+      <div className="absolute inset-x-0 bottom-0 p-8 z-20 translate-y-4 group-hover:translate-y-0 transition-transform duration-500 text-white">
+        <h4 className="text-3xl font-black tracking-tighter mb-1 uppercase text-white">
+          {member.name}
+        </h4>
+        <p className="text-sm text-blue-400 font-bold mb-4 uppercase tracking-wider">{member.specialty}</p>
+        
+        <div className="h-0 group-hover:h-auto overflow-hidden opacity-0 group-hover:opacity-100 transition-all duration-500">
+          <div className="w-full h-px bg-white/10 my-4" />
+          <p className="text-xs text-white/50 leading-relaxed uppercase tracking-widest">
+            {member.team}
+          </p>
+        </div>
+      </div>
+
+      <div className="absolute -top-12 -right-12 w-48 h-48 bg-blue-500/20 rounded-full blur-[80px] group-hover:bg-blue-500/40 transition-all" />
+    </motion.div>
+  );
+};
+
+// --- NotebookLM Guide Component ---
+const NotebookLMGuide = () => {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [activeFilter, setActiveFilter] = useState("all");
+  const [copiedId, setCopiedId] = useState<number | null>(null);
+  const [showSlides, setShowSlides] = useState(false);
+  const [selectedSlide, setSelectedSlide] = useState<string | null>(null);
+
+  const filterTags = ["전체", "모던", "레트로", "3D", "교육", "비즈니스", "아트"];
+
+  const pipelineSteps = [
+    { id: "01", title: "Deep Research", desc: "Web/Drive 실시간 검색 및 정보 수집", icon: <Search size={20} /> },
+    { id: "02", title: "Source Ingestion", desc: "멀티 소스(PDF, URL, Audio) 데이터 정제 및 업로드", icon: <Layout size={20} /> },
+    { id: "03", title: "Agentic Analysis", desc: "핵심 질문 자동 생성 및 심층 분석 수행", icon: <MessageSquare size={20} /> },
+    { id: "04", title: "Asset Generation", desc: "음성 브리핑(Audio) & 슬라이드(Styles) 생성", icon: <Zap size={20} /> },
+    { id: "05", title: "Local Sync", desc: "결과물 로컬 저장 및 공유 링크 생성", icon: <Globe size={20} /> }
+  ];
+
+  const cliCommands = [
+    { cmd: "nlm research start \"AI builders trend\"", comment: "# 리서치 시작" },
+    { cmd: "nlm source add [ID] --url [URL] --wait", comment: "# 자료 취합 및 대기" },
+    { cmd: "nlm query [ID] \"핵심 인사이트 정리\"", comment: "# AI 심층 분석" },
+    { cmd: "nlm studio create --type audio", comment: "# 음성 개요 생성" },
+    { cmd: "nlm studio create --type slides --style bento", comment: "# 보고서 슬라이드 생성" }
+  ];
+
+  const setupSteps = [
+    { 
+      title: "Common Setup", 
+      icon: <Zap size={16} />,
+      steps: [
+        { label: "Install via uv", cmd: "uv tool install notebooklm-mcp-cli" },
+        { label: "Auto Configuration", cmd: "nlm setup" }
+      ]
+    },
+    { 
+      title: "Cursor / Claude", 
+      icon: <BookOpen size={16} />,
+      desc: "IDE의 MCP Settings에 서버 등록",
+      steps: [
+        { label: "Server Path", cmd: "notebooklm-mcp" },
+        { label: "Auth Login", cmd: "nlm login" }
+      ]
+    },
+    { 
+      title: "Gemini CLI", 
+      icon: <MessageSquare size={16} />,
+      desc: "터미널 에이전트에 스킬 추가",
+      steps: [
+        { label: "Register Skill", cmd: "gemini mcp add nlm nlm" }
+      ]
+    }
+  ];
+
+  const filteredStyles = SLIDE_STYLES.filter(style => {
+    const matchesSearch = style.title.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesFilter = activeFilter === "전체" || style.category.includes(activeFilter) || style.title.includes(activeFilter);
+    return matchesSearch && matchesFilter;
+  });
+
+  const handleCopy = (text: string, id: number) => {
+    navigator.clipboard.writeText(text);
+    setCopiedId(id);
+    setTimeout(() => setCopiedId(null), 2000);
+  };
+
+  return (
+    <div className="w-full space-y-24">
+      {/* Agent Workflow Section */}
+      <section className="space-y-12">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 pt-8 md:pt-12">
+          <div className="lg:col-span-2 glass p-10 rounded-[40px] relative overflow-hidden">
+            <div className="relative z-10 text-white">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-2 h-2 bg-blue-500 rounded-full animate-ping" />
+                <span className="text-blue-400 text-[10px] font-black tracking-[0.3em] uppercase">Active AI Skill</span>
+              </div>
+              <h3 className="text-5xl md:text-7xl font-serif text-white mb-8 leading-tight">NotebookLM<br/>Automation Agent</h3>
+              <p className="text-white/60 text-xl max-w-2xl leading-relaxed font-medium">
+                "리서치부터 최종 보고서까지." <br/>
+                복잡한 수동 작업을 제거하고 AI 에이전트가 모든 프로세스를 주도하는 차세대 업무 자동화 스킬입니다.
+              </p>
+            </div>
+            <div className="absolute -bottom-20 -right-20 w-80 h-80 bg-blue-600/10 rounded-full blur-[120px]" />
+          </div>
+          
+          {/* CLI Console */}
+          <div className="bg-black/60 backdrop-blur-xl border border-white/10 rounded-[40px] p-8 font-mono text-xs overflow-hidden shadow-2xl relative group">
+            <div className="flex gap-2 mb-6 border-b border-white/5 pb-4 text-white">
+              <div className="w-3 h-3 rounded-full bg-red-500/50" />
+              <div className="w-3 h-3 rounded-full bg-yellow-500/50" />
+              <div className="w-3 h-3 rounded-full bg-green-500/50" />
+              <span className="ml-2 text-[10px] opacity-20 uppercase tracking-widest font-black">Skill Console</span>
+            </div>
+            <div className="space-y-4">
+              {cliCommands.map((c, i) => (
+                <div key={i} className="space-y-1">
+                  <div className="text-blue-400 opacity-40 italic">{c.comment}</div>
+                  <div className="flex gap-3 text-white/80">
+                    <span className="text-blue-500 font-black">$</span>
+                    <span className="break-all">{c.cmd}</span>
+                  </div>
+                </div>
+              ))}
+              <motion.div 
+                animate={{ opacity: [0, 1, 0] }} 
+                transition={{ duration: 1, repeat: Infinity }}
+                className="w-2 h-4 bg-blue-500 inline-block align-middle ml-1"
+              />
+            </div>
+            <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent pointer-events-none" />
+          </div>
+        </div>
+
+        {/* Pipeline Visualization */}
+        <div className="relative">
+          <div className="absolute top-1/2 left-0 w-full h-px bg-white/5 hidden lg:block" />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 relative z-10 text-white">
+            {pipelineSteps.map((step, i) => (
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.1 }}
+                key={step.id} 
+                className="glass p-8 rounded-[32px] border border-white/5 text-center space-y-4 hover:border-blue-500/30 transition-all group cursor-default"
+              >
+                <div className="w-14 h-14 bg-blue-600/10 text-blue-400 rounded-2xl flex items-center justify-center mx-auto group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white transition-all shadow-lg">
+                  {step.icon}
+                </div>
+                <div>
+                  <span className="text-[10px] font-black text-blue-500/40 uppercase tracking-widest block mb-1">{step.id}</span>
+                  <h5 className="font-black text-white text-sm uppercase tracking-tight group-hover:text-blue-400 transition-colors">{step.title}</h5>
+                </div>
+                <p className="text-[10px] opacity-40 leading-relaxed group-hover:opacity-60 transition-colors">{step.desc}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Integration & Setup Section */}
+      <section className="space-y-12 border-t border-white/5 pt-12">
+        <div className="flex justify-between items-end">
+          <div className="text-white">
+            <span className="text-blue-500 font-mono text-sm uppercase tracking-[0.3em] mb-4 block">Deployment & IDEs</span>
+            <h2 className="text-5xl md:text-6xl font-black tracking-tighter uppercase leading-none">
+              IDE <br /> INTEGRATION
+            </h2>
+          </div>
+          <button 
+            onClick={() => setShowSlides(!showSlides)}
+            className="px-8 py-4 glass border border-blue-500/30 text-blue-400 font-black uppercase tracking-widest rounded-2xl hover:bg-blue-600 hover:text-white transition-all flex items-center gap-3"
+          >
+            {showSlides ? "Close Preview" : "자세히 보기 (Slides)"}
+            <BookOpen size={18} />
+          </button>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {setupSteps.map((group, i) => (
+            <div key={i} className="glass p-8 rounded-[32px] border border-white/5 space-y-6 text-white">
+              <div className="flex items-center gap-3 text-blue-400">
+                {group.icon}
+                <h5 className="font-black uppercase tracking-widest text-sm">{group.title}</h5>
+              </div>
+              {group.desc && <p className="text-[10px] opacity-40 uppercase tracking-widest font-bold">{group.desc}</p>}
+              <div className="space-y-4">
+                {group.steps.map((s, j) => (
+                  <div key={j} className="space-y-2">
+                    <span className="text-[10px] opacity-30 font-bold uppercase">{s.label}</span>
+                    <div className="p-3 bg-black/40 rounded-xl border border-white/5 font-mono text-[10px] opacity-70 break-all">
+                      {s.cmd}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Slide Preview Section */}
+        <AnimatePresence>
+          {showSlides && (
+            <motion.div 
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              className="overflow-hidden"
+            >
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-12">
+                {[
+                  "/assets/slides/slide_01.png",
+                  "/assets/slides/slide_01.png",
+                  "/assets/slides/slide_01.png",
+                  "/assets/slides/slide_01.png",
+                  "/assets/slides/slide_01.png",
+                  "/assets/slides/slide_01.png"
+                ].map((src, i) => (
+                  <motion.div 
+                    whileHover={{ scale: 1.02 }}
+                    key={i} 
+                    onClick={() => setSelectedSlide(src)}
+                    className="aspect-video rounded-2xl overflow-hidden border border-white/10 glass group cursor-zoom-in relative"
+                  >
+                    <img 
+                      src={src}
+                      alt={`Slide ${i+1}`}
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-blue-600/0 group-hover:bg-blue-600/10 transition-colors flex items-center justify-center">
+                       <Search className="text-white opacity-0 group-hover:opacity-100 transition-all scale-50 group-hover:scale-100" size={32} />
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+              <div className="mt-8 p-6 bg-blue-600/10 rounded-2xl border border-blue-500/20 text-center text-white">
+                <p className="text-sm text-blue-400 font-bold uppercase tracking-widest">
+                  이미지를 클릭하면 큰 화면으로 미리볼 수 있습니다.
+                </p>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Slide Lightbox */}
+        <AnimatePresence>
+          {selectedSlide && (
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-[2000] flex items-center justify-center p-4 md:p-20 bg-black/95 backdrop-blur-3xl"
+              onClick={() => setSelectedSlide(null)}
+            >
+              <motion.div 
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.9, opacity: 0 }}
+                className="relative max-w-6xl w-full h-auto aspect-video"
+              >
+                <img src={selectedSlide} alt="Slide Fullscreen" className="w-full h-full object-contain rounded-3xl border border-white/10 shadow-2xl" />
+                <button className="absolute -top-16 right-0 text-white/60 hover:text-white transition-colors flex items-center gap-2 font-black uppercase text-xs tracking-widest bg-white/5 px-4 py-2 rounded-full border border-white/10 backdrop-blur-md">
+                  Close <X size={20} />
+                </button>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </section>
+
+      {/* Style Library Section */}
+      <section className="space-y-12">
+        <div className="flex flex-col md:flex-row justify-between items-end gap-8 border-t border-white/5 pt-12">
+          <div className="text-white">
+            <span className="text-blue-500 font-mono text-sm uppercase tracking-[0.3em] mb-4 block">Intelligence Assets</span>
+            <h2 className="text-5xl md:text-6xl font-black tracking-tighter uppercase leading-none">
+              STYLE <br /> LIBRARY
+            </h2>
+            <p className="opacity-40 text-sm mt-4 uppercase tracking-widest font-bold">
+              에이전트가 보고서 성격에 맞춰 자동 선택하는 49가지 프리미엄 스타일 큐레이션
+            </p>
+          </div>
+          
+          <div className="flex flex-wrap gap-2 md:gap-4 p-2 bg-white/5 rounded-2xl backdrop-blur-md border border-white/10">
+            {filterTags.map(tag => (
+              <button
+                key={tag}
+                onClick={() => setActiveFilter(tag === "전체" ? "all" : tag)}
+                className={`px-4 py-2 rounded-xl text-[10px] uppercase font-black tracking-widest transition-all ${
+                  activeFilter === (tag === "전체" ? "all" : tag) ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/20' : 'text-white/40 hover:text-white hover:bg-white/5'
+                }`}
+              >
+                {tag}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="space-y-6 sticky top-0 z-30 pt-6 bg-zinc-950/95 backdrop-blur-2xl -mx-8 px-8 border-b border-white/5 pb-8">
+          <div className="relative">
+            <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-white/20" size={20} />
+            <input 
+              type="text" 
+              placeholder="스타일 라이브러리 검색... (예: 벤토, 사이버, 클레이)"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full bg-white/5 border border-white/10 rounded-2xl py-5 pl-16 pr-6 text-white focus:outline-none focus:border-blue-500/50 transition-colors"
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 gap-12 pb-24">
+          {filteredStyles.map((style) => (
+            <motion.article 
+              layout
+              key={style.num}
+              className="glass rounded-[40px] overflow-hidden border border-white/10 hover:border-white/20 transition-all group"
+            >
+              <div className="flex flex-col">
+                <div className="p-10 pb-6">
+                  <div className="flex items-center gap-6 mb-8 text-white">
+                    <span className="w-12 h-12 bg-blue-600 text-white rounded-2xl flex items-center justify-center font-black text-lg shrink-0 shadow-lg shadow-blue-500/20">
+                      {style.num < 10 ? `0${style.num}` : style.num}
+                    </span>
+                    <h4 className="text-3xl font-black tracking-tight uppercase truncate">{style.title}</h4>
+                  </div>
+                  
+                  <div className="p-6 bg-black/40 rounded-3xl border border-white/5 relative group/prompt text-white">
+                    <span className="text-[10px] uppercase text-blue-500 font-black tracking-widest block mb-3">Agent Prompt Configuration</span>
+                    <code className="text-sm text-white/80 block leading-relaxed font-mono break-words pr-12">
+                      {style.prompt}
+                    </code>
+                    <button 
+                      onClick={() => handleCopy(style.prompt, style.num)}
+                      className="absolute top-6 right-6 p-3 bg-white/5 rounded-xl hover:bg-blue-600 transition-all text-white shadow-xl"
+                    >
+                      {copiedId === style.num ? <Check size={18} /> : <Copy size={18} />}
+                    </button>
+                  </div>
+                </div>
+                
+                <div className="px-10 pb-12 max-w-6xl mx-auto w-full">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    {style.images.map((img, i) => (
+                      <div 
+                        key={i} 
+                        onClick={() => handleCopy(style.prompt, style.num)}
+                        className="relative aspect-[16/10] rounded-[28px] overflow-hidden cursor-pointer group/img border border-white/10 shadow-xl bg-white/5"
+                      >
+                        <div className="absolute inset-0 bg-blue-600/0 group-hover/img:bg-blue-600/20 transition-all z-10 flex items-center justify-center">
+                          <div className="bg-black/60 backdrop-blur-md p-3 rounded-full opacity-0 group-hover/img:opacity-100 transition-all scale-50 group-hover/img:scale-100">
+                            <Copy className="text-white" size={28} />
+                          </div>
+                        </div>
+                        <img 
+                          src={`/${img}`}
+                          alt={style.title}
+                          className="w-full h-full object-cover object-top transition-transform duration-1000 group-hover/img:scale-105"
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=800";
+                          }}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.article>
+          ))}
+        </div>
+      </section>
+    </div>
+  );
+};
+
+// --- WQA Dashboard Component ---
+const WQADashboard = () => {
+  const weeks = [
+    { week: "Week 1", title: "요구사항 정리", goal: "시스템이 무엇을 보여줘야 하는지 정리", output: "운영 목표 1장, 대상 메일 라벨 기준" },
+    { week: "Week 2", title: "데이터 구조 설계", goal: "메일 내용을 어떤 표 구조로 저장할지 정리", output: "Google Sheets 컬럼 정의서, 상태/단계 표준 목록" },
+    { week: "Week 3", title: "메일 수집 자동화", goal: "Gmail 메일을 자동으로 읽을 수 있게 만들기", output: "메일 라벨 운영 규칙, 자동 실행 설정" },
+    { week: "Week 4", title: "분류 및 적재", goal: "AI 분류 로직 연결 및 시트 저장", output: "AI 분류 알고리즘, 시트 적재 스크립트" },
+    { week: "Week 5", title: "대시보드 화면 개발", goal: "저장된 데이터를 보기 쉽게 시각화", output: "KPI 카드, 프로젝트 목록 화면" },
+    { week: "Week 6", title: "서버 배포", goal: "외부에서도 접속 가능한 URL 구축", output: "GitHub Repo, Cloud Worker 배포" },
+    { week: "Week 7", title: "테스트와 안정화", goal: "실제 운영 데이터로 무결성 검증", output: "테스트 결과표, 오류 수정 내역" },
+    { week: "Week 8", title: "운영 전환", goal: "팀원 교육 및 실제 업무 적용", output: "사용자 가이드, 운영 매뉴얼" },
+  ];
+
+  return (
+    <div className="w-full space-y-16 pt-8 md:pt-12">
+      {/* Hero Section with Image */}
+      <div className="space-y-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div className="text-white">
+            <span className="text-blue-400 text-[10px] font-black tracking-[0.3em] uppercase mb-4 block">Real-time Monitoring</span>
+            <h3 className="text-5xl md:text-7xl font-serif text-white mb-8 leading-tight">WQA 인증현황<br/>모니터링 대시보드</h3>
+            <p className="text-white/60 text-lg leading-relaxed max-w-xl">
+              담당자가 주고받은 수천 통의 이메일을 AI가 실시간으로 분석하여, 현재 인증 진행 상태를 한눈에 볼 수 있는 자동화 게시판으로 전환합니다.
+            </p>
+            <div className="mt-10 flex gap-4">
+              <a href="https://coway-wqa-monitor-dashboard.asderio.workers.dev/" target="_blank" className="px-8 py-4 bg-blue-600 text-white font-black uppercase tracking-widest rounded-2xl hover:bg-blue-500 transition-all flex items-center gap-3">
+                Live Demo <ArrowUpRight size={18} />
+              </a>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            {[
+              { label: "현황 파악 속도", value: "10x", desc: "기존 수동 확인 대비" },
+              { label: "정보 누락률", value: "0%", desc: "AI 자동 아카이빙" },
+              { label: "운영 효율", value: "300%", desc: "보고 자료 자동화" },
+              { label: "커뮤니케이션", value: "Real-time", desc: "실시간 대시보드" }
+            ].map((stat, i) => (
+              <div key={i} className="p-6 bg-white/5 rounded-3xl border border-white/5 text-white">
+                <span className="block text-3xl font-black">{stat.value}</span>
+                <span className="text-[10px] uppercase text-blue-500 font-black tracking-widest mt-1 block">{stat.label}</span>
+                <p className="text-[10px] text-white/30 mt-2">{stat.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Dashboard Preview Image */}
+        <motion.div 
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="relative aspect-[16/9] rounded-[40px] overflow-hidden border border-white/10 shadow-2xl shadow-blue-500/10 group"
+        >
+          <img 
+            src="/assets/wqa_dashboard_v2.png" 
+            alt="WQA Dashboard Preview" 
+            className="w-full h-full object-cover object-top transition-transform duration-1000 group-hover:scale-105"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-transparent to-transparent opacity-60" />
+        </motion.div>
+      </div>
+
+      {/* System Concept */}
+      <section className="space-y-8 text-white">
+        <div className="flex items-center gap-4">
+          <div className="h-px flex-1 bg-white/10" />
+          <h4 className="text-sm font-black tracking-[0.2em] opacity-40 uppercase">How it works</h4>
+          <div className="h-px flex-1 bg-white/10" />
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          {[
+            { step: "01", icon: <Mail />, title: "Gmail", desc: "편지가 들어오는 우체통 (WQA 이메일 수신)" },
+            { step: "02", icon: <Zap />, title: "AI Agent", desc: "우체통을 확인하고 내용을 분석하는 비서" },
+            { step: "03", icon: <Layout />, title: "Google Sheets", desc: "분석된 결과를 일목요연하게 정리하는 노트" },
+            { step: "04", icon: <Globe />, title: "Dashboard", desc: "정리 노트를 어디서든 볼 수 있는 디지털 게시판" }
+          ].map((item, i) => (
+            <div key={i} className="p-8 glass rounded-[32px] border border-white/5 text-center space-y-4">
+              <div className="w-12 h-12 bg-blue-600/20 text-blue-400 rounded-2xl flex items-center justify-center mx-auto">
+                {item.icon}
+              </div>
+              <h5 className="font-black tracking-tight">{item.title}</h5>
+              <p className="text-xs opacity-40 leading-relaxed">{item.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Roadmap */}
+      <section className="space-y-12">
+        <div className="text-white">
+          <span className="text-blue-500 font-mono text-xs uppercase tracking-[0.3em] mb-4 block">Deployment Roadmap</span>
+          <h3 className="text-4xl font-black uppercase tracking-tighter">8-Week Execution Plan</h3>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-white">
+          {weeks.map((w, i) => (
+            <div key={i} className="group p-8 bg-white/5 rounded-[32px] border border-white/5 hover:border-blue-500/30 transition-all">
+              <div className="flex justify-between items-start mb-6">
+                <span className="px-3 py-1 bg-white/10 rounded-full text-[10px] font-black text-white/40 uppercase tracking-widest">{w.week}</span>
+                <span className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-[10px] text-white/20 group-hover:text-blue-500 group-hover:border-blue-500/50 transition-colors">0{i+1}</span>
+              </div>
+              <h5 className="text-xl font-black mb-2 uppercase tracking-tight">{w.title}</h5>
+              <p className="text-sm opacity-60 mb-4">{w.goal}</p>
+              <div className="pt-4 border-t border-white/5">
+                <span className="text-[10px] uppercase font-bold text-blue-500 tracking-widest block mb-1">Deliverables</span>
+                <p className="text-xs opacity-40">{w.output}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Conclusion */}
+      <div className="p-12 bg-blue-600 rounded-[40px] text-center space-y-6 text-white">
+        <h4 className="text-2xl font-black uppercase tracking-tight">Ready for Stability</h4>
+        <p className="opacity-80 max-w-2xl mx-auto leading-relaxed">
+          이 프로젝트는 메일 확인 시간을 획기적으로 줄여줄 뿐만 아니라, 중요한 인증 지연 건을 조기에 발견하여 사업 리스크를 최소화합니다.
+          현재 1단계 구조로 안정적인 운영을 시작할 준비가 되었습니다.
+        </p>
+      </div>
+    </div>
+  );
+};
+
+const ProjectDetailModal = ({ project, onClose }: { project: Project | null, onClose: () => void }) => {
+  if (!project) return null;
+
+  return (
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-[1000] flex items-center justify-center p-4 md:p-8 overflow-hidden"
+    >
+      <div className="absolute inset-0 bg-black/90 backdrop-blur-2xl" onClick={onClose} />
+      
+      <motion.div 
+        initial={{ y: 100, opacity: 0, scale: 0.95 }}
+        animate={{ y: 0, opacity: 1, scale: 1 }}
+        exit={{ y: 100, opacity: 0, scale: 0.95 }}
+        className="relative w-full max-w-7xl h-full max-h-[90vh] bg-zinc-950 border border-white/10 rounded-[40px] overflow-hidden flex flex-col shadow-2xl"
+      >
+        {/* Header */}
+        <div className="sticky top-0 z-50 px-8 py-6 bg-zinc-950/80 backdrop-blur-md border-b border-white/5 flex justify-between items-center shrink-0 text-white">
+          <div className="flex items-center gap-4">
+            <span className="px-3 py-1 bg-blue-600 text-[10px] font-black uppercase tracking-widest rounded-full">
+              {project.category}
+            </span>
+            <h2 className="text-xl font-black tracking-tighter uppercase">{project.title}</h2>
+          </div>
+          <button 
+            onClick={onClose}
+            className="w-12 h-12 bg-white/5 rounded-full flex items-center justify-center hover:bg-white/10 transition-colors text-white"
+          >
+            <X size={24} />
+          </button>
+        </div>
+
+        {/* Content */}
+        <div className="flex-1 overflow-y-auto custom-scrollbar px-8 md:px-12 pb-8 md:pb-12">
+          {project.id === 'p6' ? (
+            <NotebookLMGuide />
+          ) : project.id === 'p7' ? (
+            <WQADashboard />
+          ) : (
+            <div className="max-w-4xl mx-auto space-y-12 pt-8 md:pt-12 pb-24 text-white">
+              <div className="aspect-video w-full rounded-[32px] overflow-hidden bg-white/5 border border-white/10">
+                <img src={project.image} alt={project.title} className="w-full h-full object-cover" />
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+                <div className="md:col-span-2 space-y-8">
+                  <section>
+                    <h3 className="text-3xl font-black mb-4 uppercase tracking-tight">Overview</h3>
+                    <p className="opacity-60 text-lg leading-relaxed">{project.description}</p>
+                  </section>
+                  
+                  <section>
+                    <h3 className="text-xl font-black mb-4 uppercase tracking-tight">Key Features</h3>
+                    <ul className="space-y-3">
+                      {project.details.map((detail, i) => (
+                        <li key={i} className="flex items-center gap-3 opacity-80">
+                          <CheckCircle2 size={18} className="text-blue-500" />
+                          {detail}
+                        </li>
+                      ))}
+                    </ul>
+                  </section>
+                </div>
+                
+                <div className="space-y-8">
+                  <div className="p-6 bg-blue-600 rounded-3xl shadow-xl shadow-blue-500/20">
+                    <span className="text-[10px] uppercase font-black tracking-widest opacity-60 mb-2 block text-white">Key Impact</span>
+                    <p className="text-2xl font-black leading-tight text-white">{project.impact}</p>
+                  </div>
+                  
+                  <div className="p-6 glass rounded-3xl border border-white/10">
+                    <span className="text-[10px] uppercase font-black tracking-widest opacity-40 mb-4 block">Contributors</span>
+                    <div className="flex flex-wrap gap-2">
+                      {project.members.map(mid => {
+                        const member = MEMBERS.find(m => m.id === mid);
+                        return member ? (
+                          <div key={mid} className="px-3 py-1 bg-white/5 rounded-full text-[10px] font-bold opacity-80 border border-white/5">
+                            {member.name}
+                          </div>
+                        ) : null;
+                      })}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+};
+
+const ProjectGrid = ({ onProjectClick }: { onProjectClick: (p: Project) => void }) => {
+  const [activeCategory, setActiveCategory] = useState('all');
+  
+  const filteredProjects = activeCategory === 'all' 
+    ? PROJECTS 
+    : PROJECTS.filter(p => p.category === activeCategory);
+
+  return (
+    <section id="work" className="py-32 px-6 bg-black">
+      <div className="max-w-7xl mx-auto">
+        <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
+          <div>
+            <span className="text-blue-500 font-mono text-sm uppercase tracking-[0.3em] mb-4 block">Strategic Assets</span>
+            <h2 className="text-6xl md:text-8xl font-black tracking-tighter text-white uppercase leading-none">
+              THE <br /> DELIVERABLES
+            </h2>
+          </div>
+          
+          <div className="flex flex-wrap gap-2 md:gap-4 p-2 bg-white/5 rounded-2xl backdrop-blur-md border border-white/10">
+            {CATEGORIES.map(cat => (
+              <button
+                key={cat.id}
+                onClick={() => setActiveCategory(cat.id === "전체" ? "all" : cat.id)}
+                className={`px-4 py-2 rounded-xl text-[10px] uppercase font-black tracking-widest transition-all ${
+                  activeCategory === (cat.id === "전체" ? "all" : cat.id)
+                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/20' 
+                    : 'text-white/40 hover:text-white hover:bg-white/5'
+                }`}
+              >
+                {cat.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <LayoutGroup>
+          <motion.div layout className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <AnimatePresence mode="popLayout">
+              {filteredProjects.map((project) => (
+                <motion.div
+                  key={project.id}
+                  layout
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ duration: 0.5, type: "spring" }}
+                  onClick={() => onProjectClick(project)}
+                  className="group relative bg-white/5 border border-white/10 rounded-3xl overflow-hidden cursor-pointer"
+                >
+                  <div className="aspect-[16/10] overflow-hidden">
+                    <img 
+                      src={project.image} 
+                      alt={project.title}
+                      className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
+                    />
+                  </div>
+                  <div className="p-8 text-white">
+                    <div className="flex justify-between items-start mb-6">
+                      <h3 className="text-3xl font-black tracking-tighter uppercase">{project.title}</h3>
+                      <ArrowUpRight className="text-blue-500 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                    </div>
+                    <p className="opacity-60 text-sm leading-relaxed mb-6 line-clamp-2">
+                      {project.description}
+                    </p>
+                    <div className="flex items-center gap-4 py-4 border-t border-white/10">
+                      <div className="flex flex-col">
+                        <span className="text-[10px] uppercase font-bold text-blue-500 tracking-[0.2em]">Impact</span>
+                        <span className="text-xs font-black">{project.impact}</span>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </motion.div>
+        </LayoutGroup>
+      </div>
+    </section>
+  );
+};
+
+const Footer = () => {
+  return (
+    <footer id="contact" className="bg-black text-white pt-32 pb-12 px-6 overflow-hidden relative">
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+      
+      <div className="max-w-7xl mx-auto relative z-10 text-white">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 mb-32">
+          <div>
+            <h2 className="text-7xl md:text-[10vw] font-black tracking-tighter leading-none uppercase mb-12">
+              BUILD WITH <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-br from-blue-400 to-indigo-600">US.</span>
+            </h2>
+            <p className="text-xl opacity-40 max-w-md leading-relaxed mb-12 uppercase tracking-tight">
+              AI Builders는 단순한 기술 도입을 넘어, 코웨이의 업무 문화를 재정의하고 있습니다. 협업 의뢰는 언제나 환영입니다.
+            </p>
+            <button className="px-12 py-6 bg-blue-600 text-white font-black uppercase tracking-[0.3em] rounded-2xl hover:bg-blue-500 hover:scale-105 transition-all shadow-2xl shadow-blue-500/40 flex items-center gap-4 group">
+              Start Collaboration
+              <ArrowRight className="group-hover:translate-x-2 transition-transform" />
+            </button>
+          </div>
+          
+          <div className="grid grid-cols-2 gap-12 border-l border-white/10 pl-12">
+            <div>
+              <h4 className="text-[10px] uppercase tracking-[0.4em] font-black opacity-30 mb-8">Directories</h4>
+              <ul className="space-y-4 font-black text-sm uppercase tracking-widest">
+                <li><a href="#members" className="hover:text-blue-400">Members</a></li>
+                <li><a href="#work" className="hover:text-blue-400">Strategic Assets</a></li>
+                <li><a href="#curriculum" className="hover:text-blue-400">12W Curriculum</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="text-[10px] uppercase tracking-[0.4em] font-black opacity-30 mb-8">Contact</h4>
+              <p className="text-sm font-black uppercase tracking-widest leading-loose text-white">
+                Coway IoT Planning Team <br />
+                Seoul, South Korea
+              </p>
+            </div>
+          </div>
+        </div>
+        
+        <div className="pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center">
+              <Zap size={16} className="text-blue-500" />
+            </div>
+            <span className="font-black text-sm uppercase tracking-widest">AI Builders © 2026</span>
+          </div>
+          <div className="flex gap-8 text-[10px] font-black opacity-30 uppercase tracking-[0.3em]">
+            <span>Privacy Policy</span>
+            <span>Terms of Service</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="absolute bottom-0 right-0 w-[50vw] h-[50vw] bg-blue-600/10 rounded-full blur-[150px] -mr-[25vw] -mb-[25vw]" />
+    </footer>
+  );
+};
+
+export default function App() {
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+
+  return (
+    <div className="min-h-screen bg-black text-white antialiased selection:bg-blue-500 selection:text-white">
+      <div className="fixed inset-0 pointer-events-none opacity-[0.03] z-[9999]">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <filter id="noise">
+            <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" />
+          </filter>
+          <rect width="100%" height="100%" filter="url(#noise)" />
+        </svg>
+      </div>
+
+      <CustomCursor />
+      <Navbar />
+      
+      <main>
+        <Hero />
+        
+        {/* Members Section */}
+        <section id="members" className="py-32 px-6">
+          <div className="max-w-7xl mx-auto">
+            <div className="mb-16">
+              <span className="text-blue-500 font-mono text-sm uppercase tracking-[0.3em] mb-4 block">Our Architects</span>
+              <h2 className="text-6xl md:text-8xl font-black tracking-tighter text-white uppercase leading-none">
+                THE NINETY <br /> PERCENTILE.
+              </h2>
+            </div>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+              {MEMBERS.map(member => (
+                <MemberCard key={member.id} member={member} />
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <ProjectGrid onProjectClick={setSelectedProject} />
+
+        {/* Curriculum Section */}
+        <section id="curriculum" className="py-32 px-6 bg-white/5 border-y border-white/5 text-white">
+          <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
+            <div>
+              <span className="text-blue-500 font-mono text-sm uppercase tracking-[0.3em] mb-4 block">Learning Journey</span>
+              <h2 className="text-6xl font-black tracking-tighter uppercase mb-8 text-white">
+                12 WEEKS OF <br /> EVOLUTION.
+              </h2>
+              <p className="text-lg opacity-50 uppercase tracking-tight max-w-md leading-relaxed">
+                우리는 매주 목요일 점심, AI의 한계를 시험하고 실제 비즈니스 문제를 해결하기 위한 기술을 연마합니다.
+              </p>
+            </div>
+            <div className="space-y-4">
+              {[
+                "AI Foundations & LLM Logic",
+                "Advanced Prompt Engineering",
+                "RAG & External Tool Integration",
+                "Multi-Agent System Design",
+                "Strategic Deliverables Deployment"
+              ].map((step, i) => (
+                <div key={i} className="flex items-center gap-6 p-6 bg-white/5 rounded-2xl border border-white/5 hover:border-blue-500/50 transition-colors group text-white">
+                  <span className="text-4xl font-black opacity-10 group-hover:text-blue-500 transition-colors">0{i+1}</span>
+                  <span className="font-bold uppercase tracking-widest text-white">{step}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <AnimatePresence>
+        {selectedProject && (
+          <ProjectDetailModal 
+            project={selectedProject} 
+            onClose={() => setSelectedProject(null)} 
+          />
+        )}
+      </AnimatePresence>
+
+      <Footer />
+    </div>
+  );
+}
