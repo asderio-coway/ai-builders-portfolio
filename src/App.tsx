@@ -657,7 +657,7 @@ const WQADashboard = () => {
           className="relative aspect-[16/9] rounded-[40px] overflow-hidden border border-white/10 shadow-2xl shadow-blue-500/10 group"
         >
           <img 
-            src="/assets/wqa_dashboard_v2.png" 
+            src="./assets/wqa_dashboard_v2.png" 
             alt="WQA Dashboard Preview" 
             className="w-full h-full object-cover object-top transition-transform duration-1000 group-hover:scale-105"
           />

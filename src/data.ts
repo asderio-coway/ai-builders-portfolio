@@ -59,7 +59,7 @@ export const PROJECTS: Project[] = [
     impact: '인증 현황 파악 속도 10배 향상 및 누락 제로화',
     members: ['th_kim', 'mj_hong'],
     details: ['Gmail Automation', 'AI Intent Classification', 'Real-time Dashboard'],
-    image: '/assets/wqa_dashboard_v2.png',
+    image: './assets/wqa_dashboard_v2.png',
     link: 'https://coway-wqa-monitor-dashboard.asderio.workers.dev/'
   },
   {
