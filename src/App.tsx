@@ -304,7 +304,7 @@ const NotebookLMGuide = () => {
 
   const filteredStyles = SLIDE_STYLES.filter(style => {
     const matchesSearch = style.title.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesFilter = activeFilter === "전체" || style.category.includes(activeFilter) || style.title.includes(activeFilter);
+    const matchesFilter = activeFilter === "all" || style.category.includes(activeFilter) || style.title.includes(activeFilter);
     return matchesSearch && matchesFilter;
   });
 
@@ -439,12 +439,12 @@ const NotebookLMGuide = () => {
             >
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-12">
                 {[
-                  "./assets/slides/slide_01.png",
-                  "./assets/slides/slide_01.png",
-                  "./assets/slides/slide_01.png",
-                  "./assets/slides/slide_01.png",
-                  "./assets/slides/slide_01.png",
-                  "./assets/slides/slide_01.png"
+                  "assets/slides/01_벤토_그리드_스타일_모던_웹UI_1.png",
+                  "assets/slides/02_비즈니스_미니멀_스타일_1.png",
+                  "assets/slides/03_칠판_스타일_교육용_슬라이드_1.png",
+                  "assets/slides/04_일본_종이_만화책_스타일_1.png",
+                  "assets/slides/05_뉴_모피즘_스타일_모던_웹사이트_1.png",
+                  "assets/slides/06_바우하우스_현대_건축_현대_미술_스타일_1.png"
                 ].map((src, i) => (
                   <motion.div 
                     whileHover={{ scale: 1.02 }}
@@ -583,7 +583,7 @@ const NotebookLMGuide = () => {
                           </div>
                         </div>
                         <img 
-                          src={`/${img}`}
+                          src={img}
                           alt={style.title}
                           className="w-full h-full object-cover object-top transition-transform duration-1000 group-hover/img:scale-105"
                           onError={(e) => {
