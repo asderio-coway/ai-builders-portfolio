@@ -966,6 +966,22 @@ const Footer = () => {
 export default function App() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
+  useEffect(() => {
+    const hash = window.location.hash.replace('#', '');
+    const project = PROJECTS.find((p) => p.id === hash);
+    if (project) {
+      setSelectedProject(project);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (selectedProject) {
+      window.location.hash = selectedProject.id;
+    } else {
+      window.location.hash = '';
+    }
+  }, [selectedProject]);
+
   return (
     <div className="min-h-screen bg-black text-white antialiased selection:bg-blue-500 selection:text-white">
       <div className="fixed inset-0 pointer-events-none opacity-[0.03] z-[9999]">
