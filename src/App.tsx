@@ -1,5 +1,6 @@
 import { motion, useSpring, useScroll, useTransform, AnimatePresence, LayoutGroup } from "motion/react";
 import { useState, useEffect, useRef } from "react";
+import { Routes, Route, Link, useParams, useNavigate } from "react-router-dom";
 import { ArrowRight, Menu, X, ArrowUpRight, CheckCircle2, Layout, Zap, Smartphone, BookOpen, Globe, MessageSquare, Search, Copy, Check, Mail } from "lucide-react";
 import { CATEGORIES, MEMBERS, PROJECTS, Project, Member } from "./data";
 import { SLIDE_STYLES, StyleItem } from "./styleData";
@@ -1259,11 +1260,18 @@ const ProjectGrid = ({ onProjectClick }: { onProjectClick: (p: Project) => void 
                     <p className="opacity-60 text-sm leading-relaxed mb-6 line-clamp-2">
                       {project.description}
                     </p>
-                    <div className="flex items-center gap-4 py-4 border-t border-white/10">
+                    <div className="flex items-center justify-between py-4 border-t border-white/10">
                       <div className="flex flex-col">
                         <span className="text-[10px] uppercase font-bold text-blue-500 tracking-[0.2em]">Impact</span>
                         <span className="text-xs font-black">{project.impact}</span>
                       </div>
+                      <Link
+                        to={`/work/${project.id}`}
+                        onClick={(e) => e.stopPropagation()}
+                        className="px-3 py-1.5 bg-white/5 border border-white/10 rounded-lg text-[9px] font-black uppercase tracking-widest text-white/40 hover:text-white hover:bg-white/10 transition-all flex items-center gap-1.5"
+                      >
+                        전용 페이지 <ArrowUpRight size={10} />
+                      </Link>
                     </div>
                   </div>
                 </motion.div>
@@ -1335,8 +1343,172 @@ const Footer = () => {
   );
 };
 
-export default function App() {
+// --- Work Detail Page (standalone route) ---
+const WorkDetailPage = () => {
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const project = PROJECTS.find(p => p.id === id);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [id]);
+
+  if (!project) {
+    return (
+      <div className="min-h-screen bg-black flex flex-col items-center justify-center text-white gap-8">
+        <p className="text-white/40 text-xl uppercase tracking-widest">Project not found</p>
+        <Link to="/" className="px-8 py-4 bg-blue-600 text-white font-black uppercase tracking-widest rounded-2xl hover:bg-blue-500 transition-all">
+          ← Back to Hub
+        </Link>
+      </div>
+    );
+  }
+
+  const renderDetail = () => {
+    if (project.id === 'p6') return <NotebookLMGuide />;
+    if (project.id === 'p7') return <WQADashboard />;
+    if (project.id === 'p8') return <CodepopDetail />;
+    return (
+      <div className="max-w-4xl mx-auto space-y-12 pt-8 md:pt-12 pb-24 text-white">
+        <div className="aspect-video w-full rounded-[32px] overflow-hidden bg-white/5 border border-white/10">
+          <img src={project.image} alt={project.title} className="w-full h-full object-cover" />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+          <div className="md:col-span-2 space-y-8">
+            <section>
+              <h3 className="text-3xl font-black mb-4 uppercase tracking-tight">Overview</h3>
+              <p className="opacity-60 text-lg leading-relaxed">{project.description}</p>
+            </section>
+            <section>
+              <h3 className="text-xl font-black mb-4 uppercase tracking-tight">Key Features</h3>
+              <ul className="space-y-3">
+                {project.details.map((detail, i) => (
+                  <li key={i} className="flex items-center gap-3 opacity-80">
+                    <CheckCircle2 size={18} className="text-blue-500" />
+                    {detail}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          </div>
+          <div className="space-y-8">
+            <div className="p-6 bg-blue-600 rounded-3xl shadow-xl shadow-blue-500/20">
+              <span className="text-[10px] uppercase font-black tracking-widest opacity-60 mb-2 block text-white">Key Impact</span>
+              <p className="text-2xl font-black leading-tight text-white">{project.impact}</p>
+            </div>
+            <div className="p-6 glass rounded-3xl border border-white/10">
+              <span className="text-[10px] uppercase font-black tracking-widest opacity-40 mb-4 block">Contributors</span>
+              <div className="flex flex-wrap gap-2">
+                {project.members.map(mid => {
+                  const member = MEMBERS.find(m => m.id === mid);
+                  return member ? (
+                    <div key={mid} className="px-3 py-1 bg-white/5 rounded-full text-[10px] font-bold opacity-80 border border-white/5">
+                      {member.name}
+                    </div>
+                  ) : null;
+                })}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <div className="min-h-screen bg-zinc-950 text-white antialiased selection:bg-blue-500 selection:text-white">
+      <div className="fixed inset-0 pointer-events-none opacity-[0.03] z-[9999]">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <filter id="noise2">
+            <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" />
+          </filter>
+          <rect width="100%" height="100%" filter="url(#noise2)" />
+        </svg>
+      </div>
+
+      {/* Top Bar */}
+      <div className="sticky top-0 z-50 px-6 md:px-12 py-5 bg-zinc-950/80 backdrop-blur-md border-b border-white/5 flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <Link
+            to="/"
+            className="flex items-center gap-2 text-white/40 hover:text-white transition-colors text-xs uppercase tracking-[0.3em] font-black group"
+          >
+            <ArrowRight size={14} className="rotate-180 group-hover:-translate-x-1 transition-transform" />
+            AI Builders Hub
+          </Link>
+          <span className="text-white/10">/</span>
+          <span className="px-3 py-1 bg-blue-600 text-[10px] font-black uppercase tracking-widest rounded-full">
+            {project.category}
+          </span>
+        </div>
+        <div className="flex items-center gap-3">
+          {project.link && (
+            <a
+              href={project.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-[10px] font-black uppercase tracking-widest text-white/60 hover:text-white hover:bg-white/10 transition-all"
+            >
+              Live <ArrowUpRight size={12} />
+            </a>
+          )}
+        </div>
+      </div>
+
+      {/* Hero Banner */}
+      <div className="relative px-6 md:px-12 pt-12 pb-8 max-w-7xl mx-auto">
+        <div className="flex items-start justify-between gap-8 flex-wrap">
+          <div>
+            <h1 className="text-4xl md:text-7xl font-black tracking-tighter uppercase leading-none text-white mb-4">
+              {project.title}
+            </h1>
+            <p className="text-white/40 text-lg max-w-2xl leading-relaxed">{project.description}</p>
+          </div>
+          <div className="p-6 bg-blue-600/10 border border-blue-500/20 rounded-3xl shrink-0">
+            <span className="text-[10px] uppercase font-black tracking-widest text-blue-400 block mb-2">Impact</span>
+            <p className="text-white font-black text-xl max-w-xs">{project.impact}</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="px-6 md:px-12 pb-24 max-w-7xl mx-auto">
+        {renderDetail()}
+      </div>
+
+      {/* Footer nav */}
+      <div className="border-t border-white/5 px-6 md:px-12 py-12 max-w-7xl mx-auto flex items-center justify-between gap-6 flex-wrap">
+        <Link
+          to="/"
+          className="flex items-center gap-3 text-white/40 hover:text-white transition-colors font-black uppercase tracking-widest text-sm group"
+        >
+          <ArrowRight size={18} className="rotate-180 group-hover:-translate-x-1 transition-transform" />
+          All Projects
+        </Link>
+        <div className="flex gap-3">
+          {PROJECTS.filter(p => p.id !== project.id).slice(0, 3).map(p => (
+            <Link
+              key={p.id}
+              to={`/work/${p.id}`}
+              className="px-4 py-2 bg-white/5 border border-white/5 rounded-xl text-[10px] font-black uppercase tracking-widest text-white/40 hover:text-white hover:bg-white/10 transition-all"
+            >
+              {p.title.split(' ').slice(0, 2).join(' ')}
+            </Link>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// --- Main App ---
+const MainPage = () => {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const navigate = useNavigate();
+
+  const handleProjectClick = (project: Project) => {
+    setSelectedProject(project);
+  };
 
   return (
     <div className="min-h-screen bg-black text-white antialiased selection:bg-blue-500 selection:text-white">
@@ -1351,10 +1523,10 @@ export default function App() {
 
       <CustomCursor />
       <Navbar />
-      
+
       <main>
         <Hero />
-        
+
         {/* Members Section */}
         <section id="members" className="py-32 px-6">
           <div className="max-w-7xl mx-auto">
@@ -1364,7 +1536,7 @@ export default function App() {
                 THE NINETY <br /> PERCENTILE.
               </h2>
             </div>
-            
+
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {MEMBERS.map(member => (
                 <MemberCard key={member.id} member={member} />
@@ -1373,7 +1545,7 @@ export default function App() {
           </div>
         </section>
 
-        <ProjectGrid onProjectClick={setSelectedProject} />
+        <ProjectGrid onProjectClick={handleProjectClick} />
 
         {/* Curriculum Section */}
         <section id="curriculum" className="py-32 px-6 bg-white/5 border-y border-white/5 text-white">
@@ -1407,14 +1579,23 @@ export default function App() {
 
       <AnimatePresence>
         {selectedProject && (
-          <ProjectDetailModal 
-            project={selectedProject} 
-            onClose={() => setSelectedProject(null)} 
+          <ProjectDetailModal
+            project={selectedProject}
+            onClose={() => setSelectedProject(null)}
           />
         )}
       </AnimatePresence>
 
       <Footer />
     </div>
+  );
+};
+
+export default function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<MainPage />} />
+      <Route path="/work/:id" element={<WorkDetailPage />} />
+    </Routes>
   );
 }
