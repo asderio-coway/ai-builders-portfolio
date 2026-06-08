@@ -4,6 +4,8 @@ import { ArrowRight, Menu, X, ArrowUpRight, CheckCircle2, Layout, Zap, Smartphon
 import { CATEGORIES, MEMBERS, PROJECTS, Project, Member } from "./data";
 import { SLIDE_STYLES, StyleItem } from "./styleData";
 
+const asset = (p: string) => `${import.meta.env.BASE_URL}${p}`;
+
 // --- Components ---
 
 const CustomCursor = () => {
@@ -251,7 +253,7 @@ const MemberCard = ({ member }: { member: Member }) => {
 // --- NotebookLM Guide Component ---
 const NotebookLMGuide = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [activeFilter, setActiveFilter] = useState("all");
+  const [activeFilter, setActiveFilter] = useState("전체");
   const [copiedId, setCopiedId] = useState<number | null>(null);
   const [showSlides, setShowSlides] = useState(false);
   const [selectedSlide, setSelectedSlide] = useState<string | null>(null);
@@ -304,7 +306,7 @@ const NotebookLMGuide = () => {
 
   const filteredStyles = SLIDE_STYLES.filter(style => {
     const matchesSearch = style.title.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesFilter = activeFilter === "all" || style.category.includes(activeFilter) || style.title.includes(activeFilter);
+    const matchesFilter = activeFilter === "전체" || style.category.includes(activeFilter) || style.title.includes(activeFilter);
     return matchesSearch && matchesFilter;
   });
 
@@ -439,12 +441,12 @@ const NotebookLMGuide = () => {
             >
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-12">
                 {[
-                  "assets/slides/01_벤토_그리드_스타일_모던_웹UI_1.png",
-                  "assets/slides/02_비즈니스_미니멀_스타일_1.png",
-                  "assets/slides/03_칠판_스타일_교육용_슬라이드_1.png",
-                  "assets/slides/04_일본_종이_만화책_스타일_1.png",
-                  "assets/slides/05_뉴_모피즘_스타일_모던_웹사이트_1.png",
-                  "assets/slides/06_바우하우스_현대_건축_현대_미술_스타일_1.png"
+                  asset("assets/slides/slide_01.png"),
+                  asset("assets/slides/slide_01.png"),
+                  asset("assets/slides/slide_01.png"),
+                  asset("assets/slides/slide_01.png"),
+                  asset("assets/slides/slide_01.png"),
+                  asset("assets/slides/slide_01.png")
                 ].map((src, i) => (
                   <motion.div 
                     whileHover={{ scale: 1.02 }}
@@ -515,7 +517,7 @@ const NotebookLMGuide = () => {
             {filterTags.map(tag => (
               <button
                 key={tag}
-                onClick={() => setActiveFilter(tag === "전체" ? "all" : tag)}
+                onClick={() => setActiveFilter(tag)}
                 className={`px-4 py-2 rounded-xl text-[10px] uppercase font-black tracking-widest transition-all ${
                   activeFilter === (tag === "전체" ? "all" : tag) ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/20' : 'text-white/40 hover:text-white hover:bg-white/5'
                 }`}
@@ -582,8 +584,8 @@ const NotebookLMGuide = () => {
                             <Copy className="text-white" size={28} />
                           </div>
                         </div>
-                        <img 
-                          src={img}
+                        <img
+                          src={asset(img)}
                           alt={style.title}
                           className="w-full h-full object-cover object-top transition-transform duration-1000 group-hover/img:scale-105"
                           onError={(e) => {
@@ -657,7 +659,7 @@ const WQADashboard = () => {
           className="relative aspect-[16/9] rounded-[40px] overflow-hidden border border-white/10 shadow-2xl shadow-blue-500/10 group"
         >
           <img 
-            src="./assets/wqa_dashboard_v2.png" 
+            src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1000" 
             alt="WQA Dashboard Preview" 
             className="w-full h-full object-cover object-top transition-transform duration-1000 group-hover:scale-105"
           />
@@ -728,6 +730,374 @@ const WQADashboard = () => {
   );
 };
 
+// --- Codepop Detail ---
+const CodepopDetail = () => {
+  return (
+    <div className="w-full space-y-16 pt-8 md:pt-12">
+      {/* Hero */}
+      <div className="space-y-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div className="text-white">
+            <div className="flex items-center gap-3 mb-4">
+              <span className="text-blue-400 text-[10px] font-black tracking-[0.3em] uppercase">macOS Developer Tool · Open Source · Free</span>
+            </div>
+            <div className="flex items-center gap-3 mb-2">
+              <span className="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-[10px] font-bold text-white/40 uppercase tracking-widest">✏️ 홍민재</span>
+              <span className="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-[10px] font-bold text-white/40 uppercase tracking-widest">🏠 본사 AI Builders</span>
+            </div>
+            <h3 className="text-5xl md:text-7xl font-serif text-white mb-8 leading-tight mt-4">드래그하고<br/>이해하라.</h3>
+            <p className="text-white/60 text-lg leading-relaxed max-w-xl">
+              AI로 코드를 빠르게 만드는 시대지만, 정작 <em className="text-white/80 not-italic font-bold">모르는 코드를 읽고 이해하는 일</em>은 여전히 번거롭습니다. 코드를 선택하고 ⌘⇧E를 누르는 순간, AI가 요약·핵심·라인별 해설을 팝업으로 띄웁니다. 브라우저·VS Code·터미널·Slack 어디서나, 컨텍스트 스위칭 없이.
+            </p>
+            <div className="mt-10 flex flex-wrap gap-4">
+              <a href="https://github.com/oxm55522/codepop" target="_blank" rel="noopener noreferrer" className="px-8 py-4 bg-blue-600 text-white font-black uppercase tracking-widest rounded-2xl hover:bg-blue-500 transition-all flex items-center gap-3">
+                GitHub <ArrowUpRight size={18} />
+              </a>
+              <a href="https://github.com/oxm55522/codepop/releases/latest" target="_blank" rel="noopener noreferrer" className="px-8 py-4 bg-white/10 text-white font-black uppercase tracking-widest rounded-2xl hover:bg-white/20 transition-all border border-white/10 flex items-center gap-3">
+                DMG 다운로드 <ArrowUpRight size={18} />
+              </a>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            {([
+              { label: "운영 비용", value: "$0", desc: "Gemini 무료 티어" },
+              { label: "API 한도", value: "1500/일", desc: "무제한 캐시 히트" },
+              { label: "동작 환경", value: "Any App", desc: "시스템 전역 단축키" },
+              { label: "개발 방식", value: "AI First", desc: "Claude Code로 완성" },
+            ] as const).map((stat, i) => (
+              <div key={i} className="p-6 bg-white/5 rounded-3xl border border-white/5 text-white">
+                <span className="block text-3xl font-black">{stat.value}</span>
+                <span className="text-[10px] uppercase text-blue-500 font-black tracking-widest mt-1 block">{stat.label}</span>
+                <p className="text-[10px] text-white/30 mt-2">{stat.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Screenshot */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="relative rounded-[40px] overflow-hidden border border-white/10 shadow-2xl shadow-blue-500/10 bg-zinc-900 flex flex-col items-center justify-center p-8 md:p-16 gap-6"
+        >
+          <img
+            src={asset('assets/codepop_screenshot.png')}
+            alt="Codepop 팝업 스크린샷"
+            className="max-w-md w-full rounded-2xl shadow-2xl border border-white/10"
+            onError={(e) => { (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1555099962-4199c345e5dd?auto=format&fit=crop&q=80&w=800'; }}
+          />
+          <div className="flex items-center gap-3 text-white/30 text-xs font-mono uppercase tracking-widest">
+            <span className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" />
+            코드 드래그 → ⌘⇧E → 팝업 즉시 출현
+          </div>
+        </motion.div>
+      </div>
+
+      {/* Before / After */}
+      <section className="space-y-8">
+        <div className="flex items-center gap-4">
+          <div className="h-px flex-1 bg-white/10" />
+          <h4 className="text-sm font-black tracking-[0.2em] text-white/40 uppercase">Before / After</h4>
+          <div className="h-px flex-1 bg-white/10" />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="p-8 rounded-[32px] border border-red-500/20 bg-red-500/5 space-y-5 text-white"
+          >
+            <div className="flex items-center gap-3">
+              <span className="w-8 h-8 bg-red-500/20 text-red-400 rounded-xl flex items-center justify-center text-xs font-black">✗</span>
+              <span className="text-[10px] uppercase font-black tracking-[0.3em] text-red-400">Before</span>
+            </div>
+            <h5 className="text-xl font-black">흐름이 끊기는 코드 읽기</h5>
+            <div className="space-y-3">
+              {[
+                "부분 코드를 이해하려면 복사 → 챗봇 탭 전환 → 붙여넣기 → 다시 복귀",
+                "매번 컨텍스트를 잃고 다시 읽어야 하는 반복 작업",
+                "비개발자에겐 코드 자체가 벽 — 읽어도 무슨 의미인지 막막함",
+                "IDE 밖(슬랙·브라우저·PDF)의 코드는 분석 도구가 없음",
+              ].map((item, i) => (
+                <div key={i} className="flex items-start gap-3 text-sm text-white/50">
+                  <span className="text-red-400 mt-0.5 shrink-0">—</span>
+                  {item}
+                </div>
+              ))}
+            </div>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="p-8 rounded-[32px] border border-green-500/20 bg-green-500/5 space-y-5 text-white"
+          >
+            <div className="flex items-center gap-3">
+              <span className="w-8 h-8 bg-green-500/20 text-green-400 rounded-xl flex items-center justify-center text-xs font-black">✓</span>
+              <span className="text-[10px] uppercase font-black tracking-[0.3em] text-green-400">After</span>
+            </div>
+            <h5 className="text-xl font-black">맥락 이탈 제로, 즉시 이해</h5>
+            <div className="space-y-3">
+              {[
+                "어떤 앱에서든 코드 선택 + ⌘⇧E 한 번으로 그 자리에서 즉시 설명",
+                "요약·핵심 포인트·라인별 해설을 커서 옆 팝업으로 확인",
+                "비개발자도 코드를 이해 가능 — 한국어·영어 전환 지원",
+                "동일 코드 재선택 시 캐시 응답 → 속도 무한대, API 비용 $0",
+              ].map((item, i) => (
+                <div key={i} className="flex items-start gap-3 text-sm text-white/50">
+                  <span className="text-green-400 mt-0.5 shrink-0">+</span>
+                  {item}
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* How it works */}
+      <section className="space-y-8 text-white">
+        <div className="flex items-center gap-4">
+          <div className="h-px flex-1 bg-white/10" />
+          <h4 className="text-sm font-black tracking-[0.2em] opacity-40 uppercase">How it works</h4>
+          <div className="h-px flex-1 bg-white/10" />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {([
+            { step: "01", icon: <Search size={20} />, title: "어디서나 드래그", desc: "브라우저·IDE·Slack·PDF 등 텍스트가 있는 곳이면 어디서나 코드를 드래그 선택합니다." },
+            { step: "02", icon: <Zap size={20} />, title: "⌘⇧E 단축키", desc: "시스템 전역 단축키 하나. 앱 전환 없이, 탭 이동 없이. 지금 보고 있는 화면에서 바로 실행됩니다." },
+            { step: "03", icon: <MessageSquare size={20} />, title: "AI 팝업 즉시 출현", desc: "요약 · 핵심 포인트 · 우려 사항 · 라인별 해설이 커서 옆 팝업으로 즉시 표시됩니다." },
+          ] as const).map((item, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.1 }}
+              className="p-8 glass rounded-[32px] border border-white/5 text-center space-y-4 hover:border-blue-500/30 transition-all group"
+            >
+              <div className="w-14 h-14 bg-blue-600/10 text-blue-400 rounded-2xl flex items-center justify-center mx-auto group-hover:bg-blue-600 group-hover:text-white transition-all">
+                {item.icon}
+              </div>
+              <span className="text-[10px] font-black text-blue-500/40 uppercase tracking-widest block">{item.step}</span>
+              <h5 className="font-black tracking-tight text-lg">{item.title}</h5>
+              <p className="text-xs opacity-40 leading-relaxed">{item.desc}</p>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* Development Journey */}
+      <section className="space-y-8 border-t border-white/5 pt-12">
+        <div className="text-white">
+          <span className="text-blue-500 font-mono text-sm uppercase tracking-[0.3em] mb-4 block">Build Process</span>
+          <h3 className="text-4xl font-black uppercase tracking-tighter">개발 여정</h3>
+          <p className="text-white/40 text-sm mt-2 uppercase tracking-widest font-bold">Claude Code와의 대화만으로 — 기획부터 배포까지</p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-white">
+          {([
+            {
+              phase: "Phase 1",
+              title: "컨셉 프로토타입",
+              tool: "Hammerspoon",
+              desc: "Lua 스크립트 기반 Hammerspoon으로 '단축키 → 선택 텍스트 → AI 팝업' 개념 자체가 동작하는지 먼저 검증했습니다.",
+              highlight: "아이디어 → 동작하는 프로토타입을 가장 빠르게",
+              color: "blue",
+            },
+            {
+              phase: "Phase 2",
+              title: "Tauri 앱으로 전환",
+              tool: "Rust + Tauri v2",
+              desc: "\"누구나 받아서 바로 쓰게 만들자\"는 목표로 네이티브 macOS 앱으로 전환. 단축키 캡처 → 선택 텍스트 읽기 → 팝업 → Gemini 연동을 단계별 구현했습니다.",
+              highlight: "프로토타입 검증 후 확장 — 순서가 핵심",
+              color: "indigo",
+            },
+            {
+              phase: "Phase 3",
+              title: "직접 써보며 개선",
+              tool: "Dog-fooding",
+              desc: "실제로 매일 쓰면서 개선: 설정창(API 키·모델·단축키), 시스템 트레이 아이콘, 시스템 언어 자동 감지, SHA256 캐시로 반복 호출 제거, 여러 버그 수정.",
+              highlight: "쓰면서 발견한 불편함을 그날 바로 해결",
+              color: "violet",
+            },
+            {
+              phase: "Phase 4",
+              title: "패키징 & 배포",
+              tool: "DMG · GitHub Release",
+              desc: "앱 아이콘 디자인, README 작성, DMG 빌드 자동화, GitHub Releases를 통한 공개 배포까지 완성. MIT 오픈소스.",
+              highlight: "기획부터 배포까지 — Claude Code와 며칠 만에 완성",
+              color: "blue",
+            },
+          ] as const).map((phase, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.08 }}
+              viewport={{ once: true }}
+              className="group p-8 bg-white/5 rounded-[32px] border border-white/5 hover:border-blue-500/30 transition-all space-y-4"
+            >
+              <div className="flex items-center justify-between">
+                <span className="px-3 py-1 bg-blue-600/10 text-blue-400 rounded-full text-[10px] font-black tracking-widest uppercase">{phase.phase}</span>
+                <span className="px-3 py-1 bg-white/5 text-white/30 rounded-full text-[10px] font-mono">{phase.tool}</span>
+              </div>
+              <h5 className="text-xl font-black uppercase tracking-tight">{phase.title}</h5>
+              <p className="text-sm text-white/50 leading-relaxed">{phase.desc}</p>
+              <div className="pt-4 border-t border-white/5">
+                <div className="flex items-start gap-2">
+                  <CheckCircle2 size={14} className="text-blue-500 shrink-0 mt-0.5" />
+                  <p className="text-[11px] text-blue-400 font-bold leading-relaxed">{phase.highlight}</p>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* AI Output Preview */}
+      <section className="space-y-8">
+        <div className="text-white">
+          <span className="text-blue-500 font-mono text-sm uppercase tracking-[0.3em] mb-4 block">AI Output Structure</span>
+          <h3 className="text-4xl font-black uppercase tracking-tighter">팝업 응답 구조</h3>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {([
+            {
+              badge: 'SUMMARY',
+              title: '요약',
+              content: 'SHA256 해시 기반 캐시 조회 함수. 선택된 코드의 해시를 계산하여 로컬 캐시와 대조하고, 히트 시 API 호출 없이 즉시 결과를 반환합니다.',
+            },
+            {
+              badge: 'KEY POINTS',
+              title: '핵심 포인트',
+              content: '• 동일 코드 재선택 → API 호출 없이 즉시 응답\n• ~/.codepop/cache/ 로컬 저장\n• Gemini 2.5 Flash Lite 기본 (비용 $0)\n• 한국어·영어 원터치 전환',
+            },
+            {
+              badge: 'LINE-BY-LINE',
+              title: '라인별 해설',
+              content: 'L1 — SHA256 해시 계산 (코드 → 고유 ID)\nL4 — 로컬 캐시 파일 경로 생성\nL7 — 캐시 히트 여부 판단\nL11 — 신규 분석 결과를 캐시에 저장',
+            },
+          ] as const).map((item, i) => (
+            <div key={i} className="glass p-8 rounded-[32px] border border-white/10 text-white space-y-4">
+              <span className="text-[10px] font-black text-blue-500 tracking-widest uppercase">{item.badge}</span>
+              <h5 className="font-black text-lg">{item.title}</h5>
+              <p className="text-sm text-white/50 leading-relaxed whitespace-pre-line font-mono">{item.content}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Tips & Cautions */}
+      <section className="space-y-6 border-t border-white/5 pt-12">
+        <div className="text-white">
+          <span className="text-blue-500 font-mono text-sm uppercase tracking-[0.3em] mb-4 block">Lessons Learned</span>
+          <h3 className="text-4xl font-black uppercase tracking-tighter">활용 팁 & 주의사항</h3>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="p-8 rounded-[32px] border border-green-500/20 bg-green-500/5 space-y-5 text-white">
+            <div className="flex items-center gap-3">
+              <span className="w-8 h-8 bg-green-500/20 text-green-400 rounded-xl flex items-center justify-center text-sm">✅</span>
+              <h5 className="font-black text-lg">효과적이었던 것</h5>
+            </div>
+            <div className="space-y-4">
+              {([
+                { title: "작게 쪼개고 매번 검증", desc: "\"Phase 0부터\" 식으로 단계를 나눠 직접 써보고 피드백 → 품질이 크게 올라감. 한 번에 크게 만들지 않는 것이 핵심." },
+                { title: "AI에게 롤을 주기", desc: "\"macOS 네이티브 앱 전문가\"처럼 맥락을 잡아주면 Claude Code가 훨씬 더 정확한 코드를 생성했습니다." },
+                { title: "직접 쓰면서 개선", desc: "매일 실제로 사용하면 불편함이 명확하게 보입니다. 그것을 즉시 이슈로 만들어 수정하는 사이클이 가장 빨랐습니다." },
+              ] as const).map((tip, i) => (
+                <div key={i} className="space-y-1">
+                  <span className="font-black text-sm text-green-300">{tip.title}</span>
+                  <p className="text-xs text-white/40 leading-relaxed">{tip.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="p-8 rounded-[32px] border border-amber-500/20 bg-amber-500/5 space-y-5 text-white">
+            <div className="flex items-center gap-3">
+              <span className="w-8 h-8 bg-amber-500/20 text-amber-400 rounded-xl flex items-center justify-center text-sm">⚠️</span>
+              <h5 className="font-black text-lg">이렇게 하면 안 돼요</h5>
+            </div>
+            <div className="space-y-4">
+              {([
+                { title: "API 키 노출 절대 금지", desc: "Gemini API 키·토큰은 저장소에 절대 포함시키면 안 됩니다. .gitignore 설정 필수, 노출 즉시 폐기 후 재발급." },
+                { title: "한 번에 너무 큰 단계 건너뛰기", desc: "동작 확인 없이 다음 단계로 넘어가면 버그 원인 추적이 어려워집니다. 반드시 작동하는 상태를 기준점으로." },
+                { title: "AI 생성 코드 무검증 실행", desc: "특히 시스템 권한·파일 접근 코드는 반드시 내용을 확인 후 실행. 보안에 민감한 코드는 직접 리뷰 필수." },
+              ] as const).map((tip, i) => (
+                <div key={i} className="space-y-1">
+                  <span className="font-black text-sm text-amber-300">{tip.title}</span>
+                  <p className="text-xs text-white/40 leading-relaxed">{tip.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Tech Stack */}
+      <section className="space-y-8 border-t border-white/5 pt-12">
+        <div className="text-white">
+          <span className="text-blue-500 font-mono text-sm uppercase tracking-[0.3em] mb-4 block">Technology</span>
+          <h3 className="text-4xl font-black uppercase tracking-tighter">Tech Stack</h3>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-white">
+          {([
+            { name: 'Rust', pct: '46%', desc: '코어 로직 · 시스템 이벤트 · SHA256 캐싱', gradient: 'from-orange-600 to-red-700' },
+            { name: 'HTML / JS', pct: '54%', desc: '팝업 UI · 라인 참조 · 언어 토글', gradient: 'from-blue-600 to-cyan-600' },
+            { name: 'Tauri', pct: 'Framework', desc: '웹뷰 + 네이티브 브리지', gradient: 'from-yellow-600 to-amber-600' },
+            { name: 'Gemini 2.5', pct: 'AI Engine', desc: 'Flash Lite / Flash / Pro 선택형', gradient: 'from-green-600 to-emerald-600' },
+          ] as const).map((tech, i) => (
+            <div key={i} className="p-6 bg-white/5 rounded-3xl border border-white/5 space-y-3">
+              <div className={`h-1 rounded-full bg-gradient-to-r ${tech.gradient}`} />
+              <div>
+                <span className="font-black text-lg">{tech.name}</span>
+                <span className="block text-[10px] text-blue-500 font-black tracking-widest mt-1">{tech.pct}</span>
+              </div>
+              <p className="text-[10px] text-white/30 leading-relaxed">{tech.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Install */}
+      <section className="space-y-8 border-t border-white/5 pt-12">
+        <div className="text-white">
+          <span className="text-blue-500 font-mono text-sm uppercase tracking-[0.3em] mb-4 block">Quick Start</span>
+          <h3 className="text-4xl font-black uppercase tracking-tighter">설치 3단계</h3>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-white">
+          {([
+            { step: '01', title: 'DMG 설치', cmd: 'Codepop_0.1.0_aarch64.dmg', desc: 'Releases 페이지에서 다운로드 후 Applications 폴더로 드래그. Apple Silicon(M1+) 전용.' },
+            { step: '02', title: 'API 키 발급', cmd: 'aistudio.google.com/apikey', desc: 'Google AI Studio에서 무료 Gemini API 키 발급. 카드 등록 불필요. 1500 req/day 무료.' },
+            { step: '03', title: '권한 허용 후 사용', cmd: '⌘⇧E 로 즉시 사용', desc: '앱 실행 후 시스템 환경설정 → 손쉬운 사용 권한 허용. 이후 어디서나 단축키 하나로 동작.' },
+          ] as const).map((s, i) => (
+            <div key={i} className="p-8 bg-white/5 rounded-[32px] border border-white/5 space-y-4">
+              <span className="text-4xl font-black opacity-10">{s.step}</span>
+              <h5 className="font-black uppercase tracking-tight">{s.title}</h5>
+              <div className="p-3 bg-black/40 rounded-xl border border-white/5 font-mono text-[11px] text-white/60 break-all">{s.cmd}</div>
+              <p className="text-xs opacity-40 leading-relaxed">{s.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* CTA */}
+      <div className="p-12 bg-blue-600 rounded-[40px] text-center space-y-6 text-white">
+        <h4 className="text-2xl font-black uppercase tracking-tight">Built entirely with Claude Code</h4>
+        <p className="opacity-80 max-w-2xl mx-auto leading-relaxed">
+          기획부터 구현·배포까지 AI 코딩 에이전트(Claude Code)와의 대화만으로 완성된 실제 macOS 앱입니다. MIT 라이선스 오픈소스로 누구나 사용·기여할 수 있습니다.
+        </p>
+        <div className="flex justify-center gap-4 flex-wrap">
+          <a href="https://github.com/oxm55522/codepop" target="_blank" rel="noopener noreferrer" className="px-8 py-4 bg-white text-blue-600 font-black uppercase tracking-widest rounded-2xl hover:bg-blue-50 transition-all flex items-center gap-3">
+            GitHub 바로가기 <ArrowUpRight size={18} />
+          </a>
+          <a href="https://github.com/oxm55522/codepop/releases/latest" target="_blank" rel="noopener noreferrer" className="px-8 py-4 bg-white/10 text-white font-black uppercase tracking-widest rounded-2xl hover:bg-white/20 transition-all border border-white/20 flex items-center gap-3">
+            최신 릴리즈 다운로드 <ArrowUpRight size={18} />
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const ProjectDetailModal = ({ project, onClose }: { project: Project | null, onClose: () => void }) => {
   if (!project) return null;
 
@@ -768,6 +1138,8 @@ const ProjectDetailModal = ({ project, onClose }: { project: Project | null, onC
             <NotebookLMGuide />
           ) : project.id === 'p7' ? (
             <WQADashboard />
+          ) : project.id === 'p8' ? (
+            <CodepopDetail />
           ) : (
             <div className="max-w-4xl mx-auto space-y-12 pt-8 md:pt-12 pb-24 text-white">
               <div className="aspect-video w-full rounded-[32px] overflow-hidden bg-white/5 border border-white/10">
@@ -965,22 +1337,6 @@ const Footer = () => {
 
 export default function App() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
-
-  useEffect(() => {
-    const hash = window.location.hash.replace('#', '');
-    const project = PROJECTS.find((p) => p.id === hash);
-    if (project) {
-      setSelectedProject(project);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (selectedProject) {
-      window.location.hash = selectedProject.id;
-    } else {
-      window.location.hash = '';
-    }
-  }, [selectedProject]);
 
   return (
     <div className="min-h-screen bg-black text-white antialiased selection:bg-blue-500 selection:text-white">

@@ -59,7 +59,7 @@ export const PROJECTS: Project[] = [
     impact: '인증 현황 파악 속도 10배 향상 및 누락 제로화',
     members: ['th_kim', 'mj_hong'],
     details: ['Gmail Automation', 'AI Intent Classification', 'Real-time Dashboard'],
-    image: './assets/wqa_dashboard_v2.png',
+    image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1000',
     link: 'https://coway-wqa-monitor-dashboard.asderio.workers.dev/'
   },
   {
@@ -111,5 +111,16 @@ export const PROJECTS: Project[] = [
     members: ['th_kim'],
     details: ['Autonomous Research Agent', 'MCP CLI Integration', 'Multi-format Export (Slide, Audio, Doc)', '50+ Premium Style Mapping'],
     image: 'https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?auto=format&fit=crop&q=80&w=1000'
+  },
+  {
+    id: 'p8',
+    title: 'Codepop — 선택하면, 즉시 이해된다',
+    category: 'Work Ops',
+    description: '드래그 → ⌘⇧E → AI 팝업. 브라우저·VS Code·터미널·Slack 어디서나 컨텍스트 스위칭 없이 코드를 즉독하는 macOS 앱. Gemini 무료 티어로 운영비 $0, 기획부터 배포까지 Claude Code로 완성한 오픈소스.',
+    impact: '컨텍스트 스위칭 제로화 · 운영 비용 $0 · 어디서나 동작',
+    members: ['mj_hong'],
+    details: ['Rust + Tauri 시스템 전역 단축키', 'Google Gemini 2.5 AI 해설', 'SHA256 캐싱 — 동일 코드 즉시 응답', '한국어·영어 원터치 전환', 'Built entirely with Claude Code'],
+    link: 'https://github.com/oxm55522/codepop',
+    image: 'https://images.unsplash.com/photo-1555099962-4199c345e5dd?auto=format&fit=crop&q=80&w=1000'
   },
 ];
