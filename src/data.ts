@@ -123,4 +123,20 @@ export const PROJECTS: Project[] = [
     link: 'https://github.com/oxm55522/codepop',
     image: 'https://images.unsplash.com/photo-1555099962-4199c345e5dd?auto=format&fit=crop&q=80&w=1000'
   },
+  {
+    id: 'p9',
+    title: '9개 언어 번역부터 UI 검증까지, Figma 플러그인 하나로',
+    category: 'Work Ops',
+    description: 'Figma 플러그인 하나로 9개 언어 번역과 UI 텍스트 검증을 자동화. 외부 툴 없이 Figma 내에서 번역 → 검토 → 배포까지 완결되는 로컬라이제이션 파이프라인.',
+    impact: '번역~검증 사이클 80% 단축 · 9개 언어 동시 처리',
+    members: ['hn_choi'],
+    details: [
+      'Figma 플러그인 내 Claude API 연동으로 9개 언어 일괄 번역',
+      '번역 결과 UI 레이아웃 자동 검증 (텍스트 오버플로, 줄바꿈 감지)',
+      '번역 전/후 스크린샷 자동 캡처 및 비교 뷰 생성',
+      '용어집(Glossary) JSON 기반 일관성 관리',
+      'Claude Code로 기획~구현~테스트 전 과정 수행',
+    ],
+    image: 'https://images.unsplash.com/photo-1618788372246-79faff0c3742?auto=format&fit=crop&q=80&w=1000',
+  },
 ];
