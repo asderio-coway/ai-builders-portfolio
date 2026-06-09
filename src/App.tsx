@@ -1135,57 +1135,56 @@ const FigmaTranslatorDetail = () => {
 
   const steps = [
     {
-      phase: '01',
+      phase: 'Phase 1',
       title: '문제 정의',
       tool: 'Claude 기획 협업',
-      description: '9개 언어 번역 요청 시 매번 외부 번역 툴을 오가며 복붙하는 과정에서 누락·오역이 빈번히 발생. Figma 내에서 모든 과정을 완결하는 방안을 Claude와 함께 설계했다.',
+      desc: '9개 언어 번역 요청 시 매번 외부 번역 툴을 오가며 복붙하는 과정에서 누락·오역이 빈번히 발생. Figma 내에서 모든 과정을 완결하는 방안을 Claude와 함께 설계했다.',
       highlight: '외부 툴 전환 횟수: 하루 평균 40회 → 목표 0회',
     },
     {
-      phase: '02',
+      phase: 'Phase 2',
       title: 'Claude API 연동',
       tool: 'TypeScript + Figma Plugin API',
-      description: '선택된 텍스트 레이어를 일괄 수집하고 Claude API에 9개 언어 번역을 요청하는 파이프라인 구축. 비동기 병렬 처리로 번역 속도를 최적화했다.',
+      desc: '선택된 텍스트 레이어를 일괄 수집하고 Claude API에 9개 언어 번역을 요청하는 파이프라인 구축. 비동기 병렬 처리로 번역 속도를 최적화했다.',
       highlight: '레이어 100개 기준 번역 완료: 약 8초',
     },
     {
-      phase: '03',
+      phase: 'Phase 3',
       title: '용어집 & 일관성 관리',
       tool: 'JSON Glossary + Claude 검수',
-      description: '제품별 핵심 용어(필터, 루틴, IoT 등)를 JSON 용어집으로 관리하고, 번역 후 Claude가 용어집과의 불일치를 자동 감지해 수정 제안을 생성한다.',
+      desc: '제품별 핵심 용어(필터, 루틴, IoT 등)를 JSON 용어집으로 관리하고, 번역 후 Claude가 용어집과의 불일치를 자동 감지해 수정 제안을 생성한다.',
       highlight: '용어 불일치 자동 검출율: 97%',
     },
     {
-      phase: '04',
+      phase: 'Phase 4',
       title: 'UI 레이아웃 검증',
       tool: 'Figma Plugin API + 텍스트 측정',
-      description: '번역 텍스트를 레이어에 적용한 뒤 원문 대비 30% 이상 길어지거나 박스를 벗어나는 항목을 자동 감지. 문제 레이어에 경고 마커를 삽입한다.',
+      desc: '번역 텍스트를 레이어에 적용한 뒤 원문 대비 30% 이상 길어지거나 박스를 벗어나는 항목을 자동 감지. 문제 레이어에 경고 마커를 삽입한다.',
       highlight: '오버플로 감지 자동화 → 수동 QA 공수 70% 절감',
     },
     {
-      phase: '05',
+      phase: 'Phase 5',
       title: '배포 & 아카이빙',
       tool: 'Figma + 스크린샷 자동 캡처',
-      description: '번역 전·후 프레임을 나란히 놓고 스크린샷을 캡처해 비교 뷰를 자동 생성. 결과물을 Google Drive에 업로드하는 워크플로로 마무리.',
+      desc: '번역 전·후 프레임을 나란히 놓고 스크린샷을 캡처해 비교 뷰를 자동 생성. 결과물을 Google Drive에 업로드하는 워크플로로 마무리.',
       highlight: '비교 문서 생성 시간: 수동 30분 → 자동 1분',
     },
   ];
 
   return (
     <div className="w-full space-y-16 pt-8 md:pt-12">
+
       {/* Hero */}
       <div className="space-y-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div className="text-white">
+            <span className="text-blue-400 text-[10px] font-black tracking-[0.3em] uppercase mb-4 block">Figma Plugin · Localization · AI-Powered</span>
             <div className="flex items-center gap-3 mb-4">
-              <span className="text-purple-400 text-[10px] font-black tracking-[0.3em] uppercase">Figma Plugin · Localization · AI-Powered</span>
+              <span className="px-3 py-1 bg-white/10 rounded-full text-[10px] font-black text-white/40 uppercase tracking-widest">✏️ 최한나</span>
+              <span className="px-3 py-1 bg-white/10 rounded-full text-[10px] font-black text-white/40 uppercase tracking-widest">IoT앱개발팀</span>
             </div>
-            <div className="flex items-center gap-3 mb-2">
-              <span className="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-[10px] font-bold text-white/40 uppercase tracking-widest">✏️ 최한나</span>
-              <span className="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-[10px] font-bold text-white/40 uppercase tracking-widest">🏠 IoT앱개발팀</span>
-            </div>
-            <h3 className="text-5xl md:text-6xl font-serif text-white mb-8 leading-tight mt-4">번역하고,<br/>검증하고,<br/>완성하라.</h3>
-            <p className="text-white/60 text-lg leading-relaxed">
+            <h3 className="text-5xl md:text-7xl font-serif text-white mb-8 leading-tight">번역하고,<br/>검증하고,<br/>완성하라.</h3>
+            <p className="text-white/60 text-lg leading-relaxed max-w-xl">
               9개 언어 번역부터 UI 오버플로 감지, 용어집 검수까지 — Figma 플러그인 하나로 전 과정을 완결한 로컬라이제이션 파이프라인.
             </p>
           </div>
@@ -1193,15 +1192,15 @@ const FigmaTranslatorDetail = () => {
           {/* Stat Cards */}
           <div className="grid grid-cols-2 gap-4">
             {[
-              { value: '9개', label: '지원 언어', sub: 'EN·JP·ZH·DE·FR·ES·PT·AR·KO' },
-              { value: '80%', label: '사이클 단축', sub: '번역~검증 총 소요시간' },
-              { value: '97%', label: '용어 불일치 감지', sub: '자동 Glossary 검수' },
-              { value: '$0', label: '외주 번역 비용', sub: 'Claude API 인소싱' },
-            ].map((s, i) => (
-              <div key={i} className="p-6 bg-white/5 border border-white/10 rounded-3xl space-y-1">
-                <div className="text-3xl font-black text-white">{s.value}</div>
-                <div className="text-[10px] font-black uppercase tracking-widest text-purple-400">{s.label}</div>
-                <div className="text-[10px] text-white/30">{s.sub}</div>
+              { label: '지원 언어', value: '9개', desc: 'EN·JP·ZH·DE·FR·ES·PT·AR·KO' },
+              { label: '사이클 단축', value: '80%', desc: '번역~검증 총 소요시간' },
+              { label: '용어 불일치 감지', value: '97%', desc: '자동 Glossary 검수' },
+              { label: '외주 번역 비용', value: '$0', desc: 'Claude API 인소싱' },
+            ].map((stat, i) => (
+              <div key={i} className="p-6 bg-white/5 rounded-3xl border border-white/5 text-white">
+                <span className="block text-3xl font-black">{stat.value}</span>
+                <span className="text-[10px] uppercase text-blue-500 font-black tracking-widest mt-1 block">{stat.label}</span>
+                <p className="text-[10px] text-white/30 mt-2">{stat.desc}</p>
               </div>
             ))}
           </div>
@@ -1209,69 +1208,85 @@ const FigmaTranslatorDetail = () => {
       </div>
 
       {/* Before / After */}
-      <section className="space-y-6">
-        <h4 className="text-2xl font-black uppercase tracking-tight text-white">Before / After</h4>
+      <section className="space-y-8">
+        <div className="flex items-center gap-4">
+          <div className="h-px flex-1 bg-white/10" />
+          <h4 className="text-sm font-black tracking-[0.2em] text-white/40 uppercase">Before / After</h4>
+          <div className="h-px flex-1 bg-white/10" />
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="p-8 bg-red-950/30 border border-red-500/20 rounded-[32px] space-y-4">
-            <div className="flex items-center gap-3 mb-2">
-              <span className="w-8 h-8 rounded-full bg-red-500/20 flex items-center justify-center text-red-400 font-black text-sm">✕</span>
-              <span className="text-red-400 font-black uppercase tracking-widest text-[11px]">Before</span>
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="p-8 rounded-[32px] border border-red-500/20 bg-red-500/5 space-y-5 text-white"
+          >
+            <div className="flex items-center gap-3">
+              <span className="w-8 h-8 bg-red-500/20 text-red-400 rounded-xl flex items-center justify-center text-xs font-black">✗</span>
+              <span className="text-[10px] uppercase font-black tracking-[0.3em] text-red-400">Before</span>
             </div>
-            <ul className="space-y-3">
+            <h5 className="text-xl font-black">툴을 전전하는 번역 작업</h5>
+            <div className="space-y-3">
               {[
                 '외부 번역 툴 → Figma 복붙 → 재검토 반복 (하루 40+ 전환)',
                 '용어 불일치를 수동으로 찾아야 해서 누락 빈번',
                 '텍스트 오버플로 QA를 사람이 직접 각 언어별로 확인',
                 '아랍어 RTL 레이아웃 깨짐을 디자이너가 수동 교정',
-                '번역 완료~디자인 전달까지 평균 2일 소요',
               ].map((item, i) => (
-                <li key={i} className="flex items-start gap-3 text-white/60 text-sm">
-                  <span className="text-red-500 mt-0.5 shrink-0">•</span>
+                <div key={i} className="flex items-start gap-3 text-sm text-white/50">
+                  <span className="text-red-400 mt-0.5 shrink-0">—</span>
                   {item}
-                </li>
+                </div>
               ))}
-            </ul>
-          </div>
-
-          <div className="p-8 bg-green-950/30 border border-green-500/20 rounded-[32px] space-y-4">
-            <div className="flex items-center gap-3 mb-2">
-              <span className="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center text-green-400 font-black text-sm">✓</span>
-              <span className="text-green-400 font-black uppercase tracking-widest text-[11px]">After</span>
             </div>
-            <ul className="space-y-3">
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="p-8 rounded-[32px] border border-green-500/20 bg-green-500/5 space-y-5 text-white"
+          >
+            <div className="flex items-center gap-3">
+              <span className="w-8 h-8 bg-green-500/20 text-green-400 rounded-xl flex items-center justify-center text-xs font-black">✓</span>
+              <span className="text-[10px] uppercase font-black tracking-[0.3em] text-green-400">After</span>
+            </div>
+            <h5 className="text-xl font-black">Figma 내에서 원클릭 완결</h5>
+            <div className="space-y-3">
               {[
                 'Figma에서 레이어 선택 → 번역 실행 → 완료까지 원클릭',
                 '용어집 JSON 기반 불일치 자동 감지 및 수정 제안',
                 '텍스트 오버플로 자동 마킹 — QA 공수 70% 절감',
                 'RTL 언어(아랍어) 자동 감지 및 레이아웃 플래그 처리',
-                '번역 완료~전달: 평균 2일 → 당일 완료',
               ].map((item, i) => (
-                <li key={i} className="flex items-start gap-3 text-white/60 text-sm">
-                  <span className="text-green-500 mt-0.5 shrink-0">✓</span>
+                <div key={i} className="flex items-start gap-3 text-sm text-white/50">
+                  <span className="text-green-400 mt-0.5 shrink-0">+</span>
                   {item}
-                </li>
+                </div>
               ))}
-            </ul>
-          </div>
+            </div>
+          </motion.div>
         </div>
       </section>
 
       {/* 5-Step 구현 여정 */}
-      <section className="space-y-6">
-        <h4 className="text-2xl font-black uppercase tracking-tight text-white">구현 여정 — 5 Phases</h4>
-        <div className="space-y-4">
-          {steps.map((step) => (
-            <div key={step.phase} className="p-8 bg-white/3 border border-white/8 rounded-[28px] grid grid-cols-1 md:grid-cols-[80px_1fr_auto] gap-6 items-start">
-              <div className="text-5xl font-black text-white/10">{step.phase}</div>
-              <div className="space-y-2">
-                <div className="flex items-center gap-3 flex-wrap">
-                  <h5 className="text-white font-black text-lg uppercase tracking-tight">{step.title}</h5>
-                  <span className="px-2 py-0.5 bg-purple-500/20 text-purple-400 text-[10px] font-black rounded-full uppercase tracking-widest">{step.tool}</span>
-                </div>
-                <p className="text-white/50 text-sm leading-relaxed">{step.description}</p>
+      <section className="space-y-8 border-t border-white/5 pt-12">
+        <div className="text-white">
+          <span className="text-blue-500 font-mono text-sm uppercase tracking-[0.3em] mb-4 block">Build Process</span>
+          <h3 className="text-4xl font-black uppercase tracking-tighter">구현 여정</h3>
+          <p className="text-white/40 text-sm mt-2 uppercase tracking-widest font-bold">Claude Code와의 대화만으로 — 기획부터 배포까지</p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-white">
+          {steps.map((step, i) => (
+            <div key={i} className="group p-8 bg-white/5 rounded-[32px] border border-white/5 hover:border-blue-500/30 transition-all">
+              <div className="flex justify-between items-start mb-6">
+                <span className="px-3 py-1 bg-white/10 rounded-full text-[10px] font-black text-white/40 uppercase tracking-widest">{step.phase}</span>
+                <span className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-[10px] text-white/20 group-hover:text-blue-500 group-hover:border-blue-500/50 transition-colors">0{i + 1}</span>
               </div>
-              <div className="shrink-0 px-4 py-2 bg-white/5 border border-white/10 rounded-2xl text-[11px] text-white/60 leading-relaxed max-w-[220px]">
-                {step.highlight}
+              <h5 className="text-xl font-black mb-2 uppercase tracking-tight">{step.title}</h5>
+              <p className="text-sm opacity-60 mb-4">{step.desc}</p>
+              <div className="pt-4 border-t border-white/5">
+                <span className="text-[10px] uppercase font-bold text-blue-500 tracking-widest block mb-1">Deliverable</span>
+                <p className="text-xs opacity-40">{step.highlight}</p>
               </div>
             </div>
           ))}
@@ -1279,13 +1294,17 @@ const FigmaTranslatorDetail = () => {
       </section>
 
       {/* AI 프롬프트 */}
-      <section className="space-y-6">
-        <h4 className="text-2xl font-black uppercase tracking-tight text-white">실제 사용한 AI 프롬프트</h4>
-        <div className="grid grid-cols-1 gap-4">
+      <section className="space-y-8">
+        <div className="flex items-center gap-4">
+          <div className="h-px flex-1 bg-white/10" />
+          <h4 className="text-sm font-black tracking-[0.2em] text-white/40 uppercase">AI Prompts Used</h4>
+          <div className="h-px flex-1 bg-white/10" />
+        </div>
+        <div className="space-y-4 text-white">
           {prompts.map((p, idx) => (
-            <div key={idx} className="p-6 bg-white/3 border border-white/8 rounded-[24px] space-y-3">
+            <div key={idx} className="group p-6 bg-white/5 rounded-[32px] border border-white/5 hover:border-blue-500/30 transition-all space-y-3">
               <div className="flex items-center justify-between gap-4">
-                <span className="text-purple-400 text-[10px] font-black uppercase tracking-widest">{p.label}</span>
+                <span className="text-blue-500 text-[10px] font-black uppercase tracking-widest">{p.label}</span>
                 <button
                   onClick={() => copyPrompt(p.text, idx)}
                   className="flex items-center gap-2 px-3 py-1.5 bg-white/5 border border-white/10 rounded-xl text-[10px] font-black uppercase tracking-widest text-white/40 hover:text-white hover:bg-white/10 transition-all"
@@ -1294,75 +1313,86 @@ const FigmaTranslatorDetail = () => {
                   {copiedIdx === idx ? 'Copied' : 'Copy'}
                 </button>
               </div>
-              <p className="text-white/50 text-sm leading-relaxed font-mono bg-white/3 rounded-xl p-4">{p.text}</p>
+              <p className="text-white/40 text-sm leading-relaxed font-mono bg-black/20 rounded-2xl p-4">{p.text}</p>
             </div>
           ))}
         </div>
       </section>
 
       {/* Tips & Cautions */}
-      <section className="space-y-6">
-        <h4 className="text-2xl font-black uppercase tracking-tight text-white">Tips & Cautions</h4>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="p-8 bg-green-950/20 border border-green-500/20 rounded-[28px] space-y-4">
-            <span className="text-green-400 text-[10px] font-black uppercase tracking-widest">효과적이었던 것</span>
-            <ul className="space-y-4">
+      <section className="space-y-8">
+        <div className="flex items-center gap-4">
+          <div className="h-px flex-1 bg-white/10" />
+          <h4 className="text-sm font-black tracking-[0.2em] text-white/40 uppercase">Tips & Cautions</h4>
+          <div className="h-px flex-1 bg-white/10" />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-white">
+          <div className="p-8 bg-white/5 rounded-[32px] border border-green-500/20 space-y-6">
+            <span className="text-green-400 text-[10px] font-black uppercase tracking-widest block">효과적이었던 것</span>
+            <div className="space-y-5">
               {[
                 { title: '레이어 이름 규칙을 먼저 정해라', desc: '번역 대상 레이어와 UI 고정 텍스트를 이름 prefix로 구분하면 플러그인 로직이 단순해진다.' },
                 { title: 'JSON 용어집을 산출물 1순위로 만들어라', desc: '용어집 없이 번역 먼저 진행하면 나중에 일일이 수정해야 한다. 용어집이 모든 번역의 기준이 된다.' },
                 { title: '언어별 테스트는 아랍어(RTL)부터', desc: '가장 레이아웃 충격이 큰 언어를 먼저 검증하면 다른 언어는 상대적으로 쉽게 해결된다.' },
                 { title: 'Claude에게 번역+검수를 한 번에 요청', desc: '번역과 용어집 대조를 하나의 프롬프트로 묶으면 API 호출 수를 절반으로 줄일 수 있다.' },
               ].map((t, i) => (
-                <li key={i} className="space-y-1">
+                <div key={i} className="space-y-1">
                   <div className="text-white font-black text-sm">{t.title}</div>
                   <div className="text-white/40 text-xs leading-relaxed">{t.desc}</div>
-                </li>
+                </div>
               ))}
-            </ul>
+            </div>
           </div>
-
-          <div className="p-8 bg-amber-950/20 border border-amber-500/20 rounded-[28px] space-y-4">
-            <span className="text-amber-400 text-[10px] font-black uppercase tracking-widest">이렇게 하면 안 돼요</span>
-            <ul className="space-y-4">
+          <div className="p-8 bg-white/5 rounded-[32px] border border-amber-500/20 space-y-6">
+            <span className="text-amber-400 text-[10px] font-black uppercase tracking-widest block">이렇게 하면 안 돼요</span>
+            <div className="space-y-5">
               {[
                 { title: '전체 레이어 한 번에 번역 요청', desc: '레이어 수가 많을수록 API 응답 시간이 길어지고 타임아웃 위험이 높다. 50개씩 배치 처리하는 것이 안전하다.' },
                 { title: '원문 레이어를 덮어쓰기', desc: '번역 결과를 원본에 직접 쓰면 롤백이 불가능하다. 항상 원본 레이어를 보존하고 번역 전용 레이어를 별도로 생성해야 한다.' },
                 { title: '용어집 없이 배포', desc: '번역마다 용어가 달라지면 UX 일관성이 깨진다. 작더라도 용어집 관리는 첫날부터 시작해야 한다.' },
                 { title: 'RTL 검증을 마지막에 몰아서', desc: '아랍어 등 RTL 언어의 레이아웃 문제를 후반에 발견하면 전체 컴포넌트를 재설계해야 할 수 있다.' },
               ].map((t, i) => (
-                <li key={i} className="space-y-1">
+                <div key={i} className="space-y-1">
                   <div className="text-white font-black text-sm">{t.title}</div>
                   <div className="text-white/40 text-xs leading-relaxed">{t.desc}</div>
-                </li>
+                </div>
               ))}
-            </ul>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Demo 영상 */}
-      <section className="space-y-6">
-        <h4 className="text-2xl font-black uppercase tracking-tight text-white">데모 영상</h4>
-        <div className="w-full aspect-video rounded-[32px] overflow-hidden bg-white/5 border border-white/10">
+      <section className="space-y-8">
+        <div className="text-white">
+          <span className="text-blue-500 font-mono text-sm uppercase tracking-[0.3em] mb-4 block">Demo</span>
+          <h3 className="text-4xl font-black uppercase tracking-tighter">실제 동작 화면</h3>
+        </div>
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="relative aspect-video rounded-[40px] overflow-hidden border border-white/10 shadow-2xl shadow-blue-500/10"
+        >
           <iframe
             src="https://drive.google.com/file/d/1DbEWNos5wGBBUdB5PQxh9EtGLBb6c0cE/preview"
             className="w-full h-full"
             allow="autoplay"
             title="Figma Translator Demo"
           />
-        </div>
-        <p className="text-white/30 text-xs text-center">실제 Figma 플러그인 동작 화면 — 텍스트 선택 → 번역 실행 → UI 검증까지</p>
+        </motion.div>
+        <p className="text-white/30 text-xs text-center">텍스트 레이어 선택 → 번역 실행 → UI 검증까지 실제 Figma 플러그인 동작 화면</p>
       </section>
 
       {/* CTA */}
-      <div className="p-12 bg-purple-700 rounded-[40px] text-center space-y-6 text-white">
+      <div className="p-12 bg-blue-600 rounded-[40px] text-center space-y-6 text-white">
         <h4 className="text-2xl font-black uppercase tracking-tight">Built with Claude Code</h4>
         <p className="opacity-80 max-w-2xl mx-auto leading-relaxed">
-          기획 아이디어부터 Figma 플러그인 구현·배포까지 Claude Code와의 대화만으로 완성한 실제 업무 도구입니다. 9개 언어, 1개 플러그인, 그리고 외주비 $0.
+          기획 아이디어부터 Figma 플러그인 구현·배포까지 Claude Code와의 대화만으로 완성한 실제 업무 도구입니다. 9개 언어, 1개 플러그인, 외주비 $0.
         </p>
         <div className="flex justify-center gap-4 flex-wrap">
           <div className="px-8 py-4 bg-white/10 text-white font-black uppercase tracking-widest rounded-2xl border border-white/20 flex items-center gap-3">
-            <span className="text-purple-200">✏️ 최한나</span>
+            <span>✏️ 최한나</span>
             <span className="opacity-40">·</span>
             <span className="opacity-60">IoT앱개발팀</span>
           </div>
