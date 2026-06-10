@@ -1099,6 +1099,282 @@ const CodepopDetail = () => {
   );
 };
 
+// --- GWS CLI & Jira Automation Detail ---
+const GWSCLIDetail = () => {
+  const [copiedIdx, setCopiedIdx] = useState<number | null>(null);
+
+  const copyPrompt = (text: string, idx: number) => {
+    navigator.clipboard.writeText(text).then(() => {
+      setCopiedIdx(idx);
+      setTimeout(() => setCopiedIdx(null), 2000);
+    });
+  };
+
+  const prompts = [
+    {
+      label: 'Jira 이슈 자동응답',
+      text: `아래 Jira 이슈를 분석하고 IoT기획팀 담당자로서 적절한 응답 댓글을 작성해줘.
+조건: 200자 이내, 진행 상황 + 예상 완료일 + 다음 액션 포함, 정중한 말투.
+
+이슈 제목: {issue_title}
+이슈 내용: {issue_description}
+현재 상태: {issue_status}`
+    },
+    {
+      label: 'Gmail AI 분류',
+      text: `아래 이메일을 읽고 [카테고리, 담당자, 우선순위, 한줄요약]을 JSON으로 분류해줘.
+카테고리: QA_INQUIRY | SPEC_REQUEST | APPROVAL | REPORT | OTHER
+우선순위: HIGH | MEDIUM | LOW
+
+제목: {subject}
+발신: {from}
+내용: {body}`
+    },
+  ];
+
+  const services = [
+    { icon: '📧', name: 'Gmail', desc: '수신 메일 AI 분류·라벨 자동 적용·발송 자동화', badge: '→ Sheets' },
+    { icon: '📊', name: 'Google Sheets', desc: 'AI 분류 데이터 실시간 적재 · WQA 현황 자동 기록', badge: '→ Dashboard' },
+    { icon: '🎫', name: 'Jira', desc: '이슈 자동생성·댓글·전환 · QA Inquiry 2분 응답', badge: '→ Sheets' },
+    { icon: '📚', name: 'Confluence', desc: 'AI 요약 → 위키 페이지 자동 생성·업데이트', badge: '← Jira' },
+    { icon: '🤖', name: 'Claude / Cursor', desc: 'IDE 내 터미널에서 동일 CLI 파이프라인 호출', badge: 'IDE Native' },
+    { icon: '⚡', name: 'AntiGravity', desc: '사내 AI 플랫폼 · gws 명령어로 파이프라인 연동', badge: 'Internal AI' },
+  ];
+
+  const phases = [
+    { phase: 'Phase 1', title: 'GWS CLI 인증 체계', tag: 'gws auth login', desc: 'Gmail·Sheets·Drive OAuth 통합 인증. IDE·터미널 어디서든 동일 토큰 재사용.', highlight: '"한 번 인증 → 모든 서비스 연결"' },
+    { phase: 'Phase 2', title: 'Gmail 자동화 파이프라인', tag: 'Claude API + Gmail API', desc: '수신 메일 AI 분류(담당자·우선순위·카테고리) → Sheets 자동 기록 → 알림 발송.', highlight: '"수신 즉시 분류, 누락 제로"' },
+    { phase: 'Phase 3', title: 'Jira 자동응답 엔진', tag: 'jira_auto_responder.py', desc: 'Jira 신규 이슈 감지 → Claude 응답 초안 생성 → 자동 댓글 또는 담당자 메일.', highlight: '"QA Inquiry 응답 2시간 → 2분"' },
+    { phase: 'Phase 4', title: 'Confluence 연동', tag: 'MCP Jira + Confluence', desc: '회의록·정의서 AI 요약 → Confluence 페이지 자동 업데이트. 사람이 입력할 내용은 없음.', highlight: '"회의 끝나면 Wiki도 완료"' },
+    { phase: 'Phase 5', title: 'IDE 통합', tag: 'Claude Code / Cursor / AntiGravity', desc: '동일 CLI 파이프라인을 IDE 내 터미널에서 직접 호출. 코드 컨텍스트와 결합해 정밀 응답 생성.', highlight: '"도구 불문 AI Native 환경"' },
+  ];
+
+  const principles = [
+    { num: '01', title: '터미널 우선', desc: '모든 반복 업무는 CLI 명령어 한 줄로 실행 가능하게. GUI 없이도 전체 파이프라인 제어.' },
+    { num: '02', title: 'IDE 동등', desc: 'Claude Code·Cursor·AntiGravity 어디서든 동일 파이프라인 실행. 도구가 달라도 결과는 같다.' },
+    { num: '03', title: '제로 수동', desc: '반복 업무는 전부 자동화. 사람은 판단만 한다. 운영비는 $0 — 무료 티어 + 오픈소스 조합.' },
+  ];
+
+  return (
+    <div className="max-w-4xl mx-auto space-y-20 pt-8 md:pt-16 pb-24 text-white">
+
+      {/* Hero */}
+      <section className="space-y-8">
+        <span className="text-blue-400 text-[10px] font-black tracking-[0.3em] uppercase mb-4 block">
+          Work Ops · AI Native · Terminal
+        </span>
+        <div className="flex flex-wrap gap-2 mb-6">
+          {['김태현', '홍민재'].map(name => (
+            <span key={name} className="px-4 py-2 bg-white/5 border border-white/10 rounded-2xl text-[11px] font-black tracking-widest text-white/70 uppercase">
+              ✏️ {name}
+            </span>
+          ))}
+        </div>
+        <h3 className="text-5xl md:text-7xl font-serif text-white mb-8 leading-tight tracking-tighter">
+          연결하고,<br />자동화하고,<br />지휘하라.
+        </h3>
+        <p className="text-white/60 text-lg leading-relaxed tracking-tight max-w-xl">
+          Gmail에서 Jira까지, Confluence에서 Claude까지 — 터미널 명령어 하나가 6개 서비스를 연결하는 IoT기획팀의 AI Native 운영 허브.
+        </p>
+      </section>
+
+      {/* Stats */}
+      <section className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {[
+          { num: '15h', label: '주당 절감', sub: '팀 전체 합산' },
+          { num: '6', label: '연결 서비스', sub: 'Gmail·Sheets·Jira·Confluence+' },
+          { num: '2분', label: 'Jira 자동응답', sub: 'QA Inquiry SLA' },
+          { num: '$0', label: '운영 비용', sub: '무료 티어 + 오픈소스' },
+        ].map((s, i) => (
+          <div key={i} className="p-6 bg-white/5 border border-white/10 rounded-[24px] space-y-2">
+            <span className="block text-3xl font-black text-white">{s.num}</span>
+            <span className="text-[10px] uppercase text-blue-500 font-black tracking-widest block">{s.label}</span>
+            <span className="text-[10px] text-white/30 tracking-tight block">{s.sub}</span>
+          </div>
+        ))}
+      </section>
+
+      {/* Cockpit Map */}
+      <section className="space-y-8">
+        <div className="flex items-center gap-4">
+          <div className="h-px flex-1 bg-white/10" />
+          <h4 className="text-sm font-black tracking-[0.2em] text-white/40 uppercase">Cockpit Map</h4>
+          <div className="h-px flex-1 bg-white/10" />
+        </div>
+        <p className="text-white/50 text-sm leading-relaxed tracking-tight">
+          비행기 조종사가 하나의 콕핏에서 모든 계기판을 제어하듯, 터미널 하나로 6개 서비스를 동시에 지휘한다.
+        </p>
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+          {services.map((s, i) => (
+            <div key={i} className="p-5 bg-white/5 border border-white/10 rounded-[20px] space-y-3 hover:border-blue-500/40 transition-colors">
+              <div className="flex items-center justify-between">
+                <span className="text-2xl">{s.icon}</span>
+                <span className="text-[9px] font-black tracking-widest text-blue-400 uppercase bg-blue-500/10 px-2 py-1 rounded-full">{s.badge}</span>
+              </div>
+              <p className="font-black tracking-tight text-sm">{s.name}</p>
+              <p className="text-[11px] text-white/40 leading-relaxed tracking-tight">{s.desc}</p>
+            </div>
+          ))}
+        </div>
+        {/* Pipeline flow */}
+        <div className="p-5 bg-white/5 border border-white/5 rounded-[20px] text-center">
+          <p className="text-[11px] font-black tracking-[0.15em] text-white/40 uppercase mb-3">자동화 파이프라인</p>
+          <div className="flex flex-wrap justify-center items-center gap-2 text-[11px] font-black tracking-tight">
+            {['수신 메일', 'AI 분류', 'Jira 이슈', '자동 응답', 'Sheets 기록', '알림 발송'].map((step, i, arr) => (
+              <span key={i} className="flex items-center gap-2">
+                <span className="px-3 py-1.5 bg-white/10 rounded-xl text-white/80">{step}</span>
+                {i < arr.length - 1 && <span className="text-white/20">→</span>}
+              </span>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Before / After */}
+      <section className="space-y-8">
+        <div className="flex items-center gap-4">
+          <div className="h-px flex-1 bg-white/10" />
+          <h4 className="text-sm font-black tracking-[0.2em] text-white/40 uppercase">Before / After</h4>
+          <div className="h-px flex-1 bg-white/10" />
+        </div>
+        <div className="grid md:grid-cols-2 gap-6">
+          <div className="p-6 bg-white/5 border border-red-500/20 rounded-[24px] space-y-4">
+            <span className="text-[10px] uppercase font-black tracking-[0.3em] text-red-400">Before — 수동 멀티탭</span>
+            <div className="space-y-3">
+              {[
+                { t: '응답 2시간 지연', d: 'Gmail 확인 → Jira 탭 전환 → 수동 댓글 → 메일 작성' },
+                { t: '인증 현황 수작업', d: '메일 열고 엑셀에 직접 입력 — 30분/회, 누락 발생' },
+                { t: '회의록 1시간 소요', d: '메모 정리 → Confluence 로그인 → 수동 입력' },
+                { t: '도구마다 각자 다른 환경', d: '팀원마다 다른 툴, 공유·재현 불가' },
+              ].map((item, i) => (
+                <div key={i} className="space-y-1">
+                  <p className="text-sm font-black tracking-tight">{item.t}</p>
+                  <p className="text-xs text-white/40 leading-relaxed tracking-tight">{item.d}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="p-6 bg-white/5 border border-green-500/20 rounded-[24px] space-y-4">
+            <span className="text-[10px] uppercase font-black tracking-[0.3em] text-green-400">After — 터미널 하나로 지휘</span>
+            <div className="space-y-3">
+              {[
+                { t: '2분 자동응답', d: 'CLI 명령어 1개 → Claude 분류 → Jira 댓글 자동 게시' },
+                { t: '실시간 대시보드', d: 'URL 접속 한 번 → WQA 현황 전체 파악 (수동 입력 0)' },
+                { t: '회의 끝 = Wiki 완성', d: '텍스트 붙여넣기 → Claude 요약+Confluence 등록 5분' },
+                { t: '9인 팀 동일 파이프라인', d: 'Claude Code·Cursor·AntiGravity — 도구 불문 동일 결과' },
+              ].map((item, i) => (
+                <div key={i} className="space-y-1">
+                  <p className="text-sm font-black tracking-tight">{item.t}</p>
+                  <p className="text-xs text-white/40 leading-relaxed tracking-tight">{item.d}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Build Process */}
+      <section className="space-y-8">
+        <div className="flex items-center gap-4">
+          <div className="h-px flex-1 bg-white/10" />
+          <h4 className="text-sm font-black tracking-[0.2em] text-white/40 uppercase">Build Process</h4>
+          <div className="h-px flex-1 bg-white/10" />
+        </div>
+        <div className="space-y-4">
+          {phases.map((p, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ delay: i * 0.08 }}
+              viewport={{ once: true }}
+              className="p-6 bg-white/5 border border-white/10 rounded-[24px] grid md:grid-cols-[140px_1fr] gap-4"
+            >
+              <div className="space-y-1">
+                <span className="text-[9px] font-black tracking-[0.25em] text-blue-400 uppercase block">{p.phase}</span>
+                <p className="font-black text-sm tracking-tight leading-tight">{p.title}</p>
+                <span className="text-[9px] font-black text-white/30 tracking-widest uppercase block">{p.tag}</span>
+              </div>
+              <div className="space-y-2">
+                <p className="text-sm text-white/60 leading-relaxed tracking-tight">{p.desc}</p>
+                <span className="text-[10px] font-black text-blue-400 tracking-tight block">{p.highlight}</span>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* AI Native Declaration */}
+      <section className="space-y-6">
+        <div className="flex items-center gap-4">
+          <div className="h-px flex-1 bg-white/10" />
+          <h4 className="text-sm font-black tracking-[0.2em] text-white/40 uppercase">AI Native 철학</h4>
+          <div className="h-px flex-1 bg-white/10" />
+        </div>
+        <div className="p-8 bg-gradient-to-r from-blue-900/40 to-indigo-900/40 border border-blue-500/20 rounded-[32px] space-y-6">
+          <span className="text-[10px] font-black tracking-[0.3em] text-blue-400 uppercase block">IoT기획팀 AI Native 철학</span>
+          <h4 className="text-2xl font-serif text-white leading-tight tracking-tight">연결 가능한 모든 것은<br />연결한다.</h4>
+          <p className="text-white/50 text-sm leading-relaxed tracking-tight max-w-lg">
+            IoT기획팀은 2026년부터 업무 환경 전체를 AI Native로 전환 중이다. GWS CLI & Jira Automation은 그 첫 번째 성과이자, 팀이 지향하는 방향을 보여주는 원형(Prototype)이다.
+          </p>
+          <div className="grid md:grid-cols-3 gap-4">
+            {principles.map((pr, i) => (
+              <div key={i} className="p-5 bg-white/5 border border-white/10 rounded-[20px] space-y-2">
+                <span className="text-[10px] font-black tracking-widest text-blue-400 uppercase">{pr.num}</span>
+                <p className="font-black text-sm tracking-tight">{pr.title}</p>
+                <p className="text-[11px] text-white/40 leading-relaxed tracking-tight">{pr.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* AI Prompts */}
+      <section className="space-y-8">
+        <div className="flex items-center gap-4">
+          <div className="h-px flex-1 bg-white/10" />
+          <h4 className="text-sm font-black tracking-[0.2em] text-white/40 uppercase">AI Prompts</h4>
+          <div className="h-px flex-1 bg-white/10" />
+        </div>
+        <div className="space-y-4">
+          {prompts.map((p, i) => (
+            <div key={i} className="p-6 bg-white/5 border border-white/10 rounded-[24px] space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-black tracking-[0.25em] text-blue-400 uppercase">{p.label}</span>
+                <button
+                  onClick={() => copyPrompt(p.text, i)}
+                  className="px-4 py-2 bg-white/10 hover:bg-white/20 transition-all rounded-xl text-[10px] font-black tracking-widest uppercase text-white/60 flex items-center gap-2"
+                >
+                  {copiedIdx === i ? '✓ 복사됨' : '복사'}
+                </button>
+              </div>
+              <pre className="text-xs text-white/50 leading-relaxed tracking-tight whitespace-pre-wrap font-mono">{p.text}</pre>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* CTA */}
+      <div className="p-12 bg-blue-600 rounded-[40px] text-center space-y-6 text-white">
+        <h4 className="text-2xl font-black uppercase tracking-tight leading-tight">6개 서비스, 하나의 터미널</h4>
+        <p className="opacity-80 max-w-2xl mx-auto leading-relaxed tracking-tight">
+          Gmail·Jira·Confluence·Sheets·Claude·AntiGravity — 연결 가능한 모든 것을 연결해 팀 전체를 AI Native로. WQA 대시보드에서 실제 운영 결과를 확인하세요.
+        </p>
+        <div className="flex justify-center gap-4 flex-wrap">
+          <a href="https://coway-wqa-monitor-dashboard.asderio.workers.dev/" target="_blank" rel="noopener noreferrer"
+            className="px-8 py-4 bg-white text-blue-600 font-black uppercase tracking-widest rounded-2xl hover:bg-blue-50 transition-all flex items-center gap-3">
+            WQA 대시보드 보기 <ArrowUpRight size={18} />
+          </a>
+          <a href="https://asderio-coway.github.io/coway-smarthome-trend/slides/gws-cli-brief.html" target="_blank" rel="noopener noreferrer"
+            className="px-8 py-4 bg-white/10 text-white font-black uppercase tracking-widest rounded-2xl hover:bg-white/20 transition-all border border-white/20 flex items-center gap-3">
+            프로젝트 브리핑 <ArrowUpRight size={18} />
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // --- IoCare+ AI Routine Detail ---
 const IoCareRoutineDetail = () => {
   const [copiedIdx, setCopiedIdx] = useState<number | null>(null);
@@ -2130,6 +2406,8 @@ const ProjectDetailModal = ({ project, onClose }: { project: Project | null, onC
             <SmarthomeNewsletterDetail />
           ) : project.id === 'p11' ? (
             <IoCareRoutineDetail />
+          ) : project.id === 'p1' ? (
+            <GWSCLIDetail />
           ) : (
             <div className="max-w-4xl mx-auto space-y-12 pt-8 md:pt-12 pb-24 text-white">
               <div className="aspect-video w-full rounded-[32px] overflow-hidden bg-white/5 border border-white/10">
@@ -2360,6 +2638,7 @@ const WorkDetailPage = () => {
     if (project.id === 'p9') return <FigmaTranslatorDetail />;
     if (project.id === 'p10') return <SmarthomeNewsletterDetail />;
     if (project.id === 'p11') return <IoCareRoutineDetail />;
+    if (project.id === 'p1') return <GWSCLIDetail />;
     return (
       <div className="max-w-4xl mx-auto space-y-12 pt-8 md:pt-12 pb-24 text-white">
         <div className="aspect-video w-full rounded-[32px] overflow-hidden bg-white/5 border border-white/10">

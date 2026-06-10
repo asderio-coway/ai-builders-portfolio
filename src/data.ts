@@ -43,12 +43,20 @@ export const MEMBERS: Member[] = [
 export const PROJECTS: Project[] = [
   {
     id: 'p1',
-    title: 'GWS CLI & Jira Automation',
+    title: 'GWS CLI & Jira Automation — 조종사처럼, 모든 서비스를 터미널 하나로',
     category: 'Work Ops',
-    description: 'Workspace API와 Jira를 연동하여 기획/디자인 업무 효율을 300% 이상 증대시킨 자동화 툴킷.',
-    impact: '업무 시간 주당 15시간 절감',
+    description: 'Gmail·Google Sheets·Jira·Confluence를 단일 터미널 명령어로 제어. Claude Code·Cursor·AntiGravity IDE에서도 동일 파이프라인 호출 — IoT기획팀이 연결 가능한 모든 것을 AI Native로 묶은 통합 자동화 허브.',
+    impact: '주당 15시간 절감 · 6개 서비스 통합 · Jira 자동응답 2분 이내',
     members: ['th_kim', 'mj_hong'],
-    details: ['gws-cli custom hooks', 'Jira API integration', 'Auto-reporting'],
+    details: [
+      'GWS CLI: Gmail 읽기·분류·발송, Google Sheets 실시간 적재, Drive 파일 관리',
+      'Jira API: 이슈 자동생성·댓글·전환 — QA Inquiry 평균 응답시간 2분',
+      'Confluence/Wiki: 정의서·회의록 자동 게시, AI 요약본 첨부',
+      'IDE 통합: Claude Code·Cursor·AntiGravity에서 동일 CLI 파이프라인 직접 호출',
+      '자동화 체인: 수신 메일 → AI 분류 → Jira 이슈 → 자동 응답 → Sheets 기록 → 알림',
+      'IoT기획팀 AI Native: 9인 팀원 전원이 터미널·IDE에서 동일 자동화 도구 사용',
+    ],
+    link: 'https://coway-wqa-monitor-dashboard.asderio.workers.dev/',
     image: 'https://images.unsplash.com/photo-1664575602276-acd073f104c1?auto=format&fit=crop&q=80&w=1000'
   },
   {
