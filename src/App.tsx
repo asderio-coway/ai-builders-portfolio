@@ -1099,6 +1099,356 @@ const CodepopDetail = () => {
   );
 };
 
+// --- IoCare+ AI Routine Detail ---
+const IoCareRoutineDetail = () => {
+  const [copiedIdx, setCopiedIdx] = useState<number | null>(null);
+
+  const copyPrompt = (text: string, idx: number) => {
+    navigator.clipboard.writeText(text).then(() => {
+      setCopiedIdx(idx);
+      setTimeout(() => setCopiedIdx(null), 2000);
+    });
+  };
+
+  const prompts = [
+    {
+      label: '루틴 추천 프롬프트',
+      text: `아래 사용자의 제품 사용 패턴과 현재 컨텍스트(시간, 날씨, 위치)를 분석해서 IoCare+ 앱에서 설정 가능한 자동화 루틴 3가지를 JSON 형식으로 추천해줘.
+각 루틴은 아래 필드를 포함해야 해:
+- trigger: 조건 (시간 | 날씨 | 위치 | 제품상태 중 하나)
+- action: 동작 (제품제어 | 알림 | 모드실행 중 하나)
+- title: 루틴 이름 (20자 이내, 한국어)
+- reason: 이 루틴을 추천하는 이유 (30자 이내, 친근한 말투)`,
+    },
+    {
+      label: '알림 문구 생성 프롬프트',
+      text: `아래 자동화 시나리오에 맞는 사용자 친화적 알림 문구를 작성해줘.
+조건: 40자 이내, 이모지 1개 포함, 구체적 행동 제안, 친근한 말투.
+예시: "미세먼지가 나빠요! 외출 전 청정기 한 번 돌려두는 건 어때요? 🌿"`,
+    },
+  ];
+
+  const steps = [
+    {
+      phase: 'Phase 1',
+      title: '조건 체계 설계',
+      tool: 'Product Discovery',
+      desc: '시간·위치·날씨·제품 상태 4가지 트리거와 제품 제어·알림 받기·모드 실행 3가지 동작을 조합하는 자동화 매트릭스를 설계했다. 실 생활 시나리오 5가지(취침/외출/귀가/미세먼지/비)를 기준으로 조건을 정의했다.',
+      highlight: '4 트리거 × 3 동작 → 무한 조합의 자동화 규칙',
+    },
+    {
+      phase: 'Phase 2',
+      title: 'AI 루틴 추천 엔진',
+      tool: 'Claude API + 생활 패턴',
+      desc: '사용자의 제품 사용 이력과 현재 컨텍스트(시간, 날씨, 위치)를 Claude에 전달해 맞춤 루틴 JSON을 생성하는 파이프라인을 구축했다. "AI로 만들기" 경로의 핵심 엔진이다.',
+      highlight: 'iCare AI 맞춤 추천 — 설정 없이 시작',
+    },
+    {
+      phase: 'Phase 3',
+      title: '인기 자동화 큐레이션',
+      tool: '사용자 데이터 분석',
+      desc: '실 사용자 데이터를 기반으로 가장 많이 쓰이는 자동화 Top 31을 선별하고, 각 자동화에 직관적인 설명과 아이콘을 부여했다. 취침 모드(1,540명), 절전 모드(890명) 등 사용 통계를 공개해 신뢰성을 높였다.',
+      highlight: '취침 모드 1,540명 · 절전 모드 890명',
+    },
+    {
+      phase: 'Phase 4',
+      title: '프론트엔드 프로토타입',
+      tool: 'Next.js + Tailwind CSS',
+      desc: 'iPhone 스타일 모바일 목업으로 실제 UX 흐름을 검증했다. AI로 만들기 / 직접 만들기 두 경로, 나의 자동화 / 추천 자동화 탭, 7개 제품군 필터를 모두 구현해 Vercel에 즉시 배포했다.',
+      highlight: 'Vercel 즉시 배포 · 실제 인터랙션 목업',
+    },
+    {
+      phase: 'Phase 5',
+      title: '시나리오 검증',
+      tool: '실 생활 UX 검증',
+      desc: '취침/외출/미세먼지/비 예보/가족 귀가 등 5가지 대표 시나리오로 자동화 설정 성공률을 측정했다. 알림 문구 20개를 AI로 생성해 날씨·웰니스 기반 맞춤 알림 체계를 완성했다.',
+      highlight: '자동화 설정 성공률 85% 목표 달성',
+    },
+  ];
+
+  const popularAutomations = [
+    { no: '01', title: '취침 모드', desc: '취침 시 정음 모드 자동 전환', users: '1,540명' },
+    { no: '02', title: '절전 모드', desc: '외출 시 절전 모드 ON', users: '890명' },
+    { no: '03', title: '공기질 관리', desc: '미세먼지 나쁘면 집중 관리', users: '720명' },
+  ];
+
+  return (
+    <div className="w-full space-y-16 pt-8 md:pt-12">
+
+      {/* Hero */}
+      <div className="space-y-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div className="text-white">
+            <span className="text-blue-400 text-[10px] font-black tracking-[0.3em] uppercase mb-4 block">Smart Home · AI Routine · IoCare+</span>
+            <div className="flex items-center gap-3 mb-4">
+              <span className="px-3 py-1 bg-white/10 rounded-full text-[10px] font-black text-white/40 uppercase tracking-widest">✏️ 원창연</span>
+              <span className="px-3 py-1 bg-white/10 rounded-full text-[10px] font-black text-white/40 uppercase tracking-widest">✏️ 김태현</span>
+              <span className="px-3 py-1 bg-white/10 rounded-full text-[10px] font-black text-white/40 uppercase tracking-widest">IoT기획팀</span>
+            </div>
+            <h3 className="text-5xl md:text-7xl font-serif text-white mb-8 leading-tight">분석하고,<br/>추천하고,<br/>자동화하라.</h3>
+            <p className="text-white/60 text-lg leading-relaxed tracking-tight max-w-xl">
+              7개 제품군, AI 추천과 직접 설정 두 경로 — 생활 패턴·날씨·위치를 조합해 스마트홈 루틴을 자동 설계하는 IoCare+ 자동화 프로토타입.
+            </p>
+          </div>
+
+          {/* Stat Cards */}
+          <div className="grid grid-cols-2 gap-4">
+            {[
+              { label: '취침 모드 사용자', value: '1,540명', desc: '인기 자동화 1위' },
+              { label: '인기 자동화 큐레이션', value: '31개', desc: '실 사용자 데이터 기반' },
+              { label: '연동 제품군', value: '7개', desc: '정수기~음식물처리기' },
+              { label: 'AI 추천 알림', value: '20개', desc: '날씨·웰니스 기반' },
+            ].map((stat, i) => (
+              <div key={i} className="p-6 bg-white/5 rounded-3xl border border-white/5 text-white">
+                <span className="block text-3xl font-black">{stat.value}</span>
+                <span className="text-[10px] uppercase text-blue-500 font-black tracking-widest mt-1 block">{stat.label}</span>
+                <p className="text-[10px] text-white/30 mt-2">{stat.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Before / After */}
+      <section className="space-y-8">
+        <div className="flex items-center gap-4">
+          <div className="h-px flex-1 bg-white/10" />
+          <h4 className="text-sm font-black tracking-[0.2em] text-white/40 uppercase">Before / After</h4>
+          <div className="h-px flex-1 bg-white/10" />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="p-8 rounded-[32px] border border-red-500/20 bg-red-500/5 space-y-5 text-white"
+          >
+            <div className="flex items-center gap-3">
+              <span className="w-8 h-8 bg-red-500/20 text-red-400 rounded-xl flex items-center justify-center text-xs font-black">✗</span>
+              <span className="text-[10px] uppercase font-black tracking-[0.3em] text-red-400">Before</span>
+            </div>
+            <h5 className="text-xl font-black leading-tight">제품별 개별 수동 조작</h5>
+            <div className="space-y-3">
+              {[
+                '정수기·청정기·비데를 각각 앱에서 수동 ON/OFF',
+                '날씨·외출 여부에 따른 자동 대응 불가',
+                '취침·외출 등 반복 행동마다 매번 수동 실행',
+                '7개 제품 연동 규칙을 사용자가 직접 기억',
+              ].map((item, i) => (
+                <div key={i} className="flex items-start gap-3 text-sm text-white/50 leading-relaxed tracking-tight">
+                  <span className="text-red-400 mt-0.5 shrink-0">—</span>
+                  {item}
+                </div>
+              ))}
+            </div>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="p-8 rounded-[32px] border border-green-500/20 bg-green-500/5 space-y-5 text-white"
+          >
+            <div className="flex items-center gap-3">
+              <span className="w-8 h-8 bg-green-500/20 text-green-400 rounded-xl flex items-center justify-center text-xs font-black">✓</span>
+              <span className="text-[10px] uppercase font-black tracking-[0.3em] text-green-400">After</span>
+            </div>
+            <h5 className="text-xl font-black leading-tight">AI가 선제적으로 루틴을 설계</h5>
+            <div className="space-y-3">
+              {[
+                '미세먼지 나쁘면 청정기 자동 ON — AI가 날씨 감지',
+                '취침 시간 자동 인식 → 정음 모드 전환',
+                '가족 전원 외출 시 절전 모드 자동 실행',
+                '인기 자동화 31선 원클릭 적용',
+              ].map((item, i) => (
+                <div key={i} className="flex items-start gap-3 text-sm text-white/50 leading-relaxed tracking-tight">
+                  <span className="text-green-400 mt-0.5 shrink-0">—</span>
+                  {item}
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Build Process */}
+      <section className="space-y-8">
+        <div>
+          <span className="text-blue-500 font-mono text-sm uppercase tracking-[0.3em] mb-4 block">Build Process</span>
+          <h3 className="text-4xl font-black uppercase tracking-tighter leading-tight">구현 여정</h3>
+          <p className="text-white/40 text-sm mt-2 uppercase tracking-widest font-bold">조건 설계부터 프로토타입 배포까지 — Claude와 함께</p>
+        </div>
+        <div className="space-y-4">
+          {steps.map((s, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.06 }}
+              className="p-8 bg-white/5 rounded-[32px] border border-white/5 hover:border-blue-500/30 transition-all space-y-4 text-white"
+            >
+              <div className="flex items-center gap-3 flex-wrap">
+                <span className="px-3 py-1 bg-white/10 rounded-full text-[10px] font-black text-white/40 uppercase tracking-widest">{s.phase}</span>
+                <div className="p-1.5 px-3 bg-black/40 rounded-lg border border-white/5 font-mono text-[11px] text-white/50">{s.tool}</div>
+              </div>
+              <h5 className="text-xl font-black uppercase tracking-tight leading-tight">{s.title}</h5>
+              <p className="text-sm text-white/50 leading-relaxed tracking-tight">{s.desc}</p>
+              <span className="text-[10px] uppercase font-bold text-blue-500 tracking-widest block">{s.highlight}</span>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* AI Prompts */}
+      <section className="space-y-8">
+        <div className="flex items-center gap-4">
+          <div className="h-px flex-1 bg-white/10" />
+          <h4 className="text-sm font-black tracking-[0.2em] text-white/40 uppercase">AI Prompts Used</h4>
+          <div className="h-px flex-1 bg-white/10" />
+        </div>
+        <div className="space-y-4">
+          {prompts.map((p, i) => (
+            <div key={i} className="p-6 bg-white/5 border border-white/5 rounded-[24px] space-y-4 text-white">
+              <div className="flex justify-between items-center">
+                <span className="text-[10px] font-black uppercase tracking-widest text-blue-400">{p.label}</span>
+                <button
+                  onClick={() => copyPrompt(p.text, i)}
+                  className="px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-[10px] font-black uppercase tracking-widest transition-colors flex items-center gap-2"
+                >
+                  {copiedIdx === i ? '✓ Copied' : 'Copy'}
+                </button>
+              </div>
+              <pre className="text-[12px] text-white/40 leading-relaxed tracking-tight whitespace-pre-wrap font-mono">{p.text}</pre>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Popular Automations */}
+      <section className="space-y-8">
+        <div className="flex items-center gap-4">
+          <div className="h-px flex-1 bg-white/10" />
+          <h4 className="text-sm font-black tracking-[0.2em] text-white/40 uppercase">Popular Automations</h4>
+          <div className="h-px flex-1 bg-white/10" />
+        </div>
+        <div className="space-y-3">
+          {popularAutomations.map((a, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="flex items-center justify-between p-6 bg-white/5 border border-white/5 rounded-[24px] text-white"
+            >
+              <div className="flex items-center gap-6">
+                <span className="text-4xl font-black text-blue-500/30 font-mono leading-none">{a.no}</span>
+                <div>
+                  <p className="font-black text-sm tracking-tight leading-snug">{a.title}</p>
+                  <p className="text-[10px] text-white/30 mt-1 tracking-tight">{a.desc}</p>
+                </div>
+              </div>
+              <div className="text-right">
+                <span className="text-[10px] uppercase text-blue-500 font-black tracking-widest">{a.users}</span>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* Live Demo */}
+      <section className="space-y-6">
+        <div className="flex items-center gap-4">
+          <div className="h-px flex-1 bg-white/10" />
+          <h4 className="text-sm font-black tracking-[0.2em] text-white/40 uppercase">Live Demo</h4>
+          <div className="h-px flex-1 bg-white/10" />
+        </div>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="rounded-[32px] overflow-hidden border border-white/10 bg-white/5"
+        >
+          <iframe
+            src="https://frontend-o7bidfwcp-cs-projects-7d6234c5.vercel.app"
+            className="w-full"
+            style={{ height: '640px' }}
+            title="IoCare+ AI 루틴 프로토타입"
+          />
+        </motion.div>
+        <div className="flex justify-center gap-4 flex-wrap">
+          <a
+            href="https://frontend-o7bidfwcp-cs-projects-7d6234c5.vercel.app"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-6 py-3 bg-white/10 text-white font-black uppercase tracking-widest rounded-2xl hover:bg-white/20 transition-all border border-white/10 flex items-center gap-2 text-sm"
+          >
+            새 탭에서 열기 <ArrowUpRight size={16} />
+          </a>
+        </div>
+      </section>
+
+      {/* Tips & Cautions */}
+      <section className="space-y-8">
+        <div className="flex items-center gap-4">
+          <div className="h-px flex-1 bg-white/10" />
+          <h4 className="text-sm font-black tracking-[0.2em] text-white/40 uppercase">Lessons Learned</h4>
+          <div className="h-px flex-1 bg-white/10" />
+        </div>
+        <div className="grid md:grid-cols-2 gap-4">
+          <div className="p-6 bg-white/5 border border-green-500/20 rounded-[24px] space-y-4 text-white">
+            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-green-400">설계 인사이트</span>
+            <div className="space-y-3">
+              {[
+                { title: '2가지 진입 경로의 효과', desc: 'AI 추천(낮은 허들)과 직접 만들기(높은 자유도)를 병렬 제공 — 다양한 사용자 레벨 포용' },
+                { title: '인기 자동화 공개의 신뢰 효과', desc: '사용자 수 공개로 "1,540명이 쓰는" 사회적 증거 → 설정 결정을 쉽게 만듦' },
+                { title: '날씨 트리거의 확장성', desc: '날씨 조건을 API로 자동 감지하면 사용자 입력 없이 선제적 자동화 가능' },
+              ].map((tip, i) => (
+                <div key={i} className="space-y-1">
+                  <p className="text-sm font-black tracking-tight">{tip.title}</p>
+                  <p className="text-xs text-white/40 leading-relaxed tracking-tight">{tip.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="p-6 bg-white/5 border border-amber-500/20 rounded-[24px] space-y-4 text-white">
+            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-amber-400">활용 시 참고</span>
+            <div className="space-y-3">
+              {[
+                { title: '프로토타입 URL 접근', desc: 'Vercel Preview URL — 팀 계정 인증 없이 접근 가능 (Public Preview)' },
+                { title: '리포트 슬라이드', desc: '슬라이드 URL은 팀 내부 인증 필요, 아래 CTA 링크 참고' },
+                { title: '위치 조건 설정', desc: '"우리집" 등 위치 조건은 앱 내 주소 등록 후 선택 가능' },
+              ].map((tip, i) => (
+                <div key={i} className="space-y-1">
+                  <p className="text-sm font-black tracking-tight">{tip.title}</p>
+                  <p className="text-xs text-white/40 leading-relaxed tracking-tight">{tip.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <div className="p-12 bg-blue-600 rounded-[40px] text-center space-y-6 text-white">
+        <h4 className="text-2xl font-black uppercase tracking-tight leading-tight">스마트홈의 미래, AI가 설계한다</h4>
+        <p className="opacity-80 max-w-2xl mx-auto leading-relaxed tracking-tight">
+          생활 패턴을 학습하고, 날씨와 위치를 감지하며, 7개 제품군을 연결하는 AI 자동화 엔진. IoCare+의 다음 스텝을 직접 체험해보세요.
+        </p>
+        <div className="flex justify-center gap-4 flex-wrap">
+          <a href="https://frontend-o7bidfwcp-cs-projects-7d6234c5.vercel.app" target="_blank" rel="noopener noreferrer"
+            className="px-8 py-4 bg-white text-blue-600 font-black uppercase tracking-widest rounded-2xl hover:bg-blue-50 transition-all flex items-center gap-3">
+            프로토타입 체험하기 <ArrowUpRight size={18} />
+          </a>
+          <a href="https://iocare-routine-report-oqzw02yjd-cs-projects-7d6234c5.vercel.app/" target="_blank" rel="noopener noreferrer"
+            className="px-8 py-4 bg-white/10 text-white font-black uppercase tracking-widest rounded-2xl hover:bg-white/20 transition-all border border-white/20 flex items-center gap-3">
+            리포트 슬라이드 <ArrowUpRight size={18} />
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // --- Smarthome Newsletter Detail ---
 const SmarthomeNewsletterDetail = () => {
   const [copiedIdx, setCopiedIdx] = useState<number | null>(null);
@@ -1767,6 +2117,8 @@ const ProjectDetailModal = ({ project, onClose }: { project: Project | null, onC
             <FigmaTranslatorDetail />
           ) : project.id === 'p10' ? (
             <SmarthomeNewsletterDetail />
+          ) : project.id === 'p11' ? (
+            <IoCareRoutineDetail />
           ) : (
             <div className="max-w-4xl mx-auto space-y-12 pt-8 md:pt-12 pb-24 text-white">
               <div className="aspect-video w-full rounded-[32px] overflow-hidden bg-white/5 border border-white/10">
@@ -1996,6 +2348,7 @@ const WorkDetailPage = () => {
     if (project.id === 'p8') return <CodepopDetail />;
     if (project.id === 'p9') return <FigmaTranslatorDetail />;
     if (project.id === 'p10') return <SmarthomeNewsletterDetail />;
+    if (project.id === 'p11') return <IoCareRoutineDetail />;
     return (
       <div className="max-w-4xl mx-auto space-y-12 pt-8 md:pt-12 pb-24 text-white">
         <div className="aspect-video w-full rounded-[32px] overflow-hidden bg-white/5 border border-white/10">

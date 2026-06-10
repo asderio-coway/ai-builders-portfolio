@@ -124,6 +124,23 @@ export const PROJECTS: Project[] = [
     image: 'https://images.unsplash.com/photo-1555099962-4199c345e5dd?auto=format&fit=crop&q=80&w=1000'
   },
   {
+    id: 'p11',
+    title: 'IoCare+ AI 루틴 — 스마트홈 자동화를 AI가 설계한다',
+    category: 'Smart Home',
+    description: 'AI가 생활 패턴·날씨·위치를 분석해 정수기·청정기 등 7개 제품군 루틴을 자동 추천. 직접 만들기와 AI 추천 두 경로로 누구나 스마트홈 자동화를 설계할 수 있는 프로토타입.',
+    impact: '인기 자동화 1,540명 사용 · 31개 큐레이션 · 7개 제품군 통합',
+    members: ['cy_won', 'th_kim'],
+    details: [
+      'AI로 만들기: iCare AI가 생활 패턴 분석 후 맞춤 루틴 자동 추천',
+      '직접 만들기: 시간·위치·날씨·제품 상태 4가지 조건 + 3가지 동작 조합',
+      '인기 자동화 Top 31 큐레이션 — 실 사용자 데이터 기반',
+      'AI 추천 알림 20개 — 날씨 예보·웰니스 기반 푸시 알림',
+      'Next.js + Tailwind CSS iPhone 스타일 프로토타입, Vercel 배포',
+    ],
+    link: 'https://frontend-o7bidfwcp-cs-projects-7d6234c5.vercel.app',
+    image: 'https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&q=80&w=1000',
+  },
+  {
     id: 'p10',
     title: '스마트홈 트렌드 뉴스레터 — AI가 매주 큐레이션하는 업계 인사이트',
     category: 'Global Intel',
