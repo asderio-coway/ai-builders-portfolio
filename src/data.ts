@@ -124,6 +124,23 @@ export const PROJECTS: Project[] = [
     image: 'https://images.unsplash.com/photo-1555099962-4199c345e5dd?auto=format&fit=crop&q=80&w=1000'
   },
   {
+    id: 'p10',
+    title: '스마트홈 트렌드 뉴스레터 — AI가 매주 큐레이션하는 업계 인사이트',
+    category: 'Global Intel',
+    description: 'RSS 수집 → Claude 요약 → HTML 렌더링 → GitHub Pages 배포까지 100% 자동화된 스마트홈 트렌드 뉴스레터. 기자 없이 AI가 주도하는 무인 퍼블리싱 파이프라인.',
+    impact: '5호 발행 완료 · 주간 업계 동향 완전 자동화 · 운영비 $0',
+    members: ['th_kim'],
+    details: [
+      'discover.mjs — RSS 100+ 피드 자동 수집 및 중복 제거',
+      'summarize.mjs — Claude API 기사 분류·요약·코웨이 관점 인사이트 생성',
+      'fetch-images.mjs — Unsplash API 3단계 폴백 이미지 자동 매칭',
+      'render.mjs — 계절 테마 Tailwind CSS HTML 생성 (Variant A/B)',
+      'publish-pages.sh — GitHub Pages 무인 배포 · 운영비 $0',
+    ],
+    link: 'https://asderio-coway.github.io/coway-smarthome-trend/',
+    image: 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&q=80&w=1000',
+  },
+  {
     id: 'p9',
     title: '9개 언어 번역부터 UI 검증까지, Figma 플러그인 하나로',
     category: 'Work Ops',

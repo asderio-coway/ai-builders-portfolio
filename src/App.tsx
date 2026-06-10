@@ -1099,6 +1099,304 @@ const CodepopDetail = () => {
   );
 };
 
+// --- Smarthome Newsletter Detail ---
+const SmarthomeNewsletterDetail = () => {
+  const [copiedIdx, setCopiedIdx] = useState<number | null>(null);
+
+  const copyPrompt = (text: string, idx: number) => {
+    navigator.clipboard.writeText(text).then(() => {
+      setCopiedIdx(idx);
+      setTimeout(() => setCopiedIdx(null), 2000);
+    });
+  };
+
+  const prompts = [
+    {
+      label: '기사 요약 프롬프트',
+      text: `다음 스마트홈 관련 기사를 분석하고, 아래 형식의 JSON으로 반환해줘.
+- title_ko: 독자가 바로 이해할 수 있는 한국어 제목 (50자 이내)
+- summary_ko: 핵심 내용을 2~3문장으로 요약. 숫자·데이터 포함. 코웨이 IoT 기획 담당자 관점에서 업계 시사점까지.
+- category: ai-routine | ecosystem | wellness | standard-regulation | business-model | energy 중 하나
+- image_query: Unsplash 검색에 쓸 영문 키워드 3~5단어`,
+    },
+    {
+      label: '3줄 요약(Glance) 생성',
+      text: `이번 호의 기사 6건을 바탕으로 독자에게 전달할 핵심 메시지 3가지를 한국어로 작성해줘.
+각 문장은 50자 이내로, 구체적인 숫자나 사실 근거를 포함할 것.
+배경 지식이 없는 독자도 이해할 수 있도록 산업 용어는 괄호 안에 간단히 설명을 추가해줘.`,
+    },
+    {
+      label: '이슈 타이틀 생성',
+      text: `아래 기사 요약들을 읽고, 이번 호 뉴스레터의 제목을 만들어줘.
+조건: 40자 이내, 가장 임팩트 있는 트렌드 2가지를 연결, 숫자 또는 구체적 사례 포함.
+예시: "아마존 AI 스피커가 무료로 풀리고, 집 안 기기 연결 범위가 보안·카메라까지 넓어졌다"`,
+    },
+  ];
+
+  const steps = [
+    {
+      phase: 'Step 1',
+      title: 'RSS 수집',
+      tool: 'discover.mjs',
+      desc: '100여 개의 스마트홈·테크 미디어 RSS 피드를 자동 크롤링. 게재일 기준으로 필터링하고 중복 URL을 제거해 이번 호에 담을 후보 기사 풀을 구성한다.',
+      highlight: '피드 100+ · 중복 자동 제거 · 발행일 기준 필터',
+    },
+    {
+      phase: 'Step 2',
+      title: 'AI 요약 & 분류',
+      tool: 'summarize.mjs (Claude API)',
+      desc: '후보 기사 각각을 Claude에 전달해 한국어 제목·2문장 요약·카테고리를 생성. 코웨이 IoT 기획 담당자 관점에서 업계 시사점을 포함하는 프롬프트로 단순 번역을 넘어 인사이트를 추출한다.',
+      highlight: '6건 선별 → 제목·요약·카테고리·Glance 자동 생성',
+    },
+    {
+      phase: 'Step 3',
+      title: '이미지 자동 매칭',
+      tool: 'fetch-images.mjs (Unsplash API)',
+      desc: '각 기사의 og:image를 1차 시도, 없으면 Unsplash API로 image_query 검색, 그것도 실패하면 그라데이션 폴백. 저작권 크레딧을 JSON에 자동 기록한다.',
+      highlight: '3단계 폴백 · 저작권 크레딧 자동 기록 · Demo 50 req/h 무료',
+    },
+    {
+      phase: 'Step 4',
+      title: 'HTML 렌더링',
+      tool: 'render.mjs (Tailwind CSS)',
+      desc: '계절별 컬러 테마(봄·여름·가을·겨울)와 A/B Variant를 지원하는 템플릿으로 이슈 상세 페이지와 아카이브 인덱스를 동시 생성. 데이터만 바꾸면 항상 동일한 출력이 나오는 결정론적 파이프라인.',
+      highlight: '계절 테마 자동 적용 · 이슈 페이지 + 인덱스 동시 생성',
+    },
+    {
+      phase: 'Step 5',
+      title: 'GitHub Pages 배포',
+      tool: 'publish-pages.sh',
+      desc: 'dist/ 폴더를 gh-pages 브랜치에 force-push하여 즉시 배포. 서버·도메인·CDN 비용 전혀 없이 전 세계에 서비스된다.',
+      highlight: '운영비 $0 · 배포 후 약 1분 내 반영',
+    },
+  ];
+
+  const issues = [
+    { no: 5, title: 'AI 홈 에이전트 전쟁, Matter 2.0 초안 공개', date: '2026-06-09' },
+    { no: 4, title: '아마존 AI 스피커 무료화, Matter 1.5 카메라 지원', date: '2026-06-02' },
+    { no: 3, title: 'Gemini on-device, Thread 5G 병합', date: '2026-04-23' },
+  ];
+
+  return (
+    <div className="max-w-5xl mx-auto space-y-24 pt-8 md:pt-12 pb-24 text-white">
+
+      {/* Hero */}
+      <div className="space-y-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {[
+            { val: '5호', label: '발행 완료' },
+            { val: '100%', label: '무인 파이프라인' },
+            { val: '$0', label: '운영 비용' },
+            { val: '5분', label: '주간 브리핑' },
+          ].map((s, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.1 }}
+              className="p-6 bg-white/5 rounded-3xl border border-white/5 text-center space-y-1"
+            >
+              <div className="text-3xl font-black text-blue-500">{s.val}</div>
+              <div className="text-xs opacity-40 uppercase tracking-widest">{s.label}</div>
+            </motion.div>
+          ))}
+        </div>
+        <p className="text-lg opacity-60 leading-relaxed max-w-3xl">
+          RSS 수집 → Claude 요약 → Unsplash 이미지 매칭 → HTML 렌더링 → GitHub Pages 배포까지, 사람 손이 닿지 않는 완전 자동 뉴스레터. 스마트홈 업계 동향을 코웨이 IoT 기획 관점으로 매주 정리한다.
+        </p>
+      </div>
+
+      {/* Before / After */}
+      <section className="space-y-6">
+        <div className="flex items-center gap-4">
+          <div className="h-px flex-1 bg-white/10" />
+          <h4 className="text-sm font-black tracking-[0.2em] text-white/40 uppercase">Before / After</h4>
+          <div className="h-px flex-1 bg-white/10" />
+        </div>
+        <div className="grid md:grid-cols-2 gap-6">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="p-8 bg-red-500/5 border border-red-500/20 rounded-[32px] space-y-4"
+          >
+            <span className="text-xs font-black uppercase tracking-[0.3em] text-red-400">Before</span>
+            <h4 className="text-xl font-black">수동 트렌드 탐색</h4>
+            <ul className="space-y-3 text-sm opacity-60">
+              {[
+                '매주 수십 개 뉴스 사이트를 일일이 방문',
+                '기사 요약·번역 수동 작업 (2시간+/주)',
+                '코웨이 관점의 시사점 도출 별도 작업',
+                '공유 문서 정리 및 배포에 추가 시간 소요',
+              ].map((t, i) => (
+                <li key={i} className="flex items-start gap-2">
+                  <span className="text-red-400 mt-0.5">✕</span>{t}
+                </li>
+              ))}
+            </ul>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="p-8 bg-green-500/5 border border-green-500/20 rounded-[32px] space-y-4"
+          >
+            <span className="text-xs font-black uppercase tracking-[0.3em] text-green-400">After</span>
+            <h4 className="text-xl font-black">AI 자동 퍼블리싱</h4>
+            <ul className="space-y-3 text-sm opacity-60">
+              {[
+                '명령어 하나로 수집~배포 전 과정 완료',
+                'Claude가 코웨이 관점 인사이트 자동 생성',
+                'Unsplash 이미지 저작권 크레딧까지 자동 처리',
+                'GitHub Pages에 즉시 발행, 공유 URL 한 줄',
+              ].map((t, i) => (
+                <li key={i} className="flex items-start gap-2">
+                  <span className="text-green-400 mt-0.5">✓</span>{t}
+                </li>
+              ))}
+            </ul>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Pipeline */}
+      <section className="space-y-8">
+        <div>
+          <span className="text-blue-500 font-mono text-sm uppercase tracking-[0.3em] mb-4 block">Pipeline</span>
+          <h3 className="text-4xl font-black uppercase tracking-tighter">자동화 파이프라인</h3>
+        </div>
+        <div className="space-y-4">
+          {steps.map((s, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.06 }}
+              className="p-8 bg-white/5 rounded-[32px] border border-white/5 hover:border-blue-500/30 transition-all grid md:grid-cols-[120px_1fr_auto] gap-6 items-start"
+            >
+              <div className="space-y-1">
+                <span className="text-xs font-black text-blue-500 uppercase tracking-widest">{s.phase}</span>
+                <h5 className="font-black uppercase tracking-tight">{s.title}</h5>
+              </div>
+              <div className="space-y-2">
+                <div className="p-2 bg-black/40 rounded-lg border border-white/5 font-mono text-[11px] text-white/50 inline-block">{s.tool}</div>
+                <p className="text-sm opacity-50 leading-relaxed">{s.desc}</p>
+              </div>
+              <div className="p-3 bg-blue-500/10 border border-blue-500/20 rounded-2xl text-[11px] text-blue-400 font-black max-w-[200px] text-right">{s.highlight}</div>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* AI Prompts */}
+      <section className="space-y-8">
+        <div className="flex items-center gap-4">
+          <div className="h-px flex-1 bg-white/10" />
+          <h4 className="text-sm font-black tracking-[0.2em] text-white/40 uppercase">AI Prompts</h4>
+          <div className="h-px flex-1 bg-white/10" />
+        </div>
+        <div className="space-y-4">
+          {prompts.map((p, i) => (
+            <div key={i} className="p-6 bg-white/5 border border-white/5 rounded-[24px] space-y-3">
+              <div className="flex justify-between items-center">
+                <span className="text-xs font-black uppercase tracking-widest text-blue-400">{p.label}</span>
+                <button
+                  onClick={() => copyPrompt(p.text, i)}
+                  className="px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-xs font-black uppercase tracking-wider transition-colors flex items-center gap-2"
+                >
+                  {copiedIdx === i ? '✓ Copied' : 'Copy'}
+                </button>
+              </div>
+              <pre className="text-[12px] opacity-50 leading-relaxed whitespace-pre-wrap font-mono">{p.text}</pre>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Published Issues */}
+      <section className="space-y-8">
+        <div className="flex items-center gap-4">
+          <div className="h-px flex-1 bg-white/10" />
+          <h4 className="text-sm font-black tracking-[0.2em] text-white/40 uppercase">Published Issues</h4>
+          <div className="h-px flex-1 bg-white/10" />
+        </div>
+        <div className="grid gap-4">
+          {issues.map((iss, i) => (
+            <motion.a
+              key={i}
+              href={`https://asderio-coway.github.io/coway-smarthome-trend/issues/${iss.date}.html`}
+              target="_blank"
+              rel="noopener noreferrer"
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="flex items-center justify-between p-6 bg-white/5 border border-white/5 rounded-[24px] hover:border-blue-500/30 hover:bg-white/8 transition-all group"
+            >
+              <div className="flex items-center gap-6">
+                <span className="text-4xl font-black text-blue-500/30 font-mono">{String(iss.no).padStart(2, '0')}</span>
+                <div>
+                  <p className="font-black text-sm">{iss.title}</p>
+                  <p className="text-xs opacity-40 mt-1">{iss.date.replace(/-/g, '.')}</p>
+                </div>
+              </div>
+              <ArrowUpRight size={18} className="opacity-30 group-hover:opacity-80 transition-opacity text-blue-400" />
+            </motion.a>
+          ))}
+        </div>
+      </section>
+
+      {/* Tips */}
+      <section className="grid md:grid-cols-2 gap-4">
+        <div className="p-6 bg-white/5 border border-green-500/20 rounded-[24px] space-y-3">
+          <span className="text-xs font-black uppercase tracking-[0.3em] text-green-400">운영 팁</span>
+          <ul className="space-y-2 text-sm opacity-60">
+            {[
+              'Unsplash Demo 키: 50 req/h 무료, 배포 전 충분',
+              'CARDNEWS_VARIANT=b 환경변수로 A/B 테스트 가능',
+              'discover.mjs 후 수동으로 JSON 편집 가능 — 완전 자동과 수동 혼용 지원',
+            ].map((t, i) => <li key={i} className="flex gap-2"><span className="text-green-400">✓</span>{t}</li>)}
+          </ul>
+        </div>
+        <div className="p-6 bg-white/5 border border-amber-500/20 rounded-[24px] space-y-3">
+          <span className="text-xs font-black uppercase tracking-[0.3em] text-amber-400">주의사항</span>
+          <ul className="space-y-2 text-sm opacity-60">
+            {[
+              '기사 수는 정확히 6건 (run.mjs 게이트 하드코딩)',
+              'Claude API 키는 .env에만 저장, 커밋 금지',
+              'RSS 피드 URL 변경 시 discover.mjs SOURCE 배열 업데이트 필요',
+            ].map((t, i) => <li key={i} className="flex gap-2"><span className="text-amber-400">!</span>{t}</li>)}
+          </ul>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <div className="p-12 bg-blue-600 rounded-[40px] text-center space-y-6 text-white">
+        <h4 className="text-2xl font-black uppercase tracking-tight">스마트홈 트렌드 뉴스레터 구독</h4>
+        <p className="opacity-80 max-w-2xl mx-auto leading-relaxed">
+          매주 스마트홈 업계의 핵심 동향 6건을 코웨이 IoT 기획 관점으로 요약·큐레이션합니다. AI가 수집하고, 사람이 활용합니다.
+        </p>
+        <div className="flex justify-center gap-4 flex-wrap">
+          <a href="https://asderio-coway.github.io/coway-smarthome-trend/" target="_blank" rel="noopener noreferrer"
+            className="px-8 py-4 bg-white text-blue-600 font-black uppercase tracking-widest rounded-2xl hover:bg-blue-50 transition-all flex items-center gap-3">
+            뉴스레터 보기 <ArrowUpRight size={18} />
+          </a>
+        </div>
+      </div>
+
+      {/* Credit */}
+      <div className="text-center space-y-2">
+        <p className="text-sm opacity-40">Built by</p>
+        <div className="inline-flex items-center gap-3 px-8 py-4 bg-white/5 rounded-2xl border border-white/5 text-white">
+          <span>🗞️ 김태현</span>
+          <span className="opacity-40">·</span>
+          <span className="opacity-60">IoT기획팀 / AI 전략</span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // --- Figma Translator Detail ---
 const FigmaTranslatorDetail = () => {
   const [copiedIdx, setCopiedIdx] = useState<number | null>(null);
@@ -1446,6 +1744,8 @@ const ProjectDetailModal = ({ project, onClose }: { project: Project | null, onC
             <CodepopDetail />
           ) : project.id === 'p9' ? (
             <FigmaTranslatorDetail />
+          ) : project.id === 'p10' ? (
+            <SmarthomeNewsletterDetail />
           ) : (
             <div className="max-w-4xl mx-auto space-y-12 pt-8 md:pt-12 pb-24 text-white">
               <div className="aspect-video w-full rounded-[32px] overflow-hidden bg-white/5 border border-white/10">
@@ -1674,6 +1974,7 @@ const WorkDetailPage = () => {
     if (project.id === 'p7') return <WQADashboard />;
     if (project.id === 'p8') return <CodepopDetail />;
     if (project.id === 'p9') return <FigmaTranslatorDetail />;
+    if (project.id === 'p10') return <SmarthomeNewsletterDetail />;
     return (
       <div className="max-w-4xl mx-auto space-y-12 pt-8 md:pt-12 pb-24 text-white">
         <div className="aspect-video w-full rounded-[32px] overflow-hidden bg-white/5 border border-white/10">
