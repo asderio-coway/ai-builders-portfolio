@@ -1153,14 +1153,14 @@ const SmarthomeNewsletterDetail = () => {
       title: '이미지 자동 매칭',
       tool: 'fetch-images.mjs (Unsplash API)',
       desc: '각 기사의 og:image를 1차 시도, 없으면 Unsplash API로 image_query 검색, 그것도 실패하면 그라데이션 폴백. 저작권 크레딧을 JSON에 자동 기록한다.',
-      highlight: '3단계 폴백 · 저작권 크레딧 자동 기록 · Demo 50 req/h 무료',
+      highlight: '3단계 폴백 · 저작권 크레딧 자동 기록 · Demo 무료',
     },
     {
       phase: 'Step 4',
       title: 'HTML 렌더링',
       tool: 'render.mjs (Tailwind CSS)',
       desc: '계절별 컬러 테마(봄·여름·가을·겨울)와 A/B Variant를 지원하는 템플릿으로 이슈 상세 페이지와 아카이브 인덱스를 동시 생성. 데이터만 바꾸면 항상 동일한 출력이 나오는 결정론적 파이프라인.',
-      highlight: '계절 테마 자동 적용 · 이슈 페이지 + 인덱스 동시 생성',
+      highlight: '계절 테마 자동 적용 · 이슈 + 인덱스 동시 생성',
     },
     {
       phase: 'Step 5',
@@ -1178,92 +1178,108 @@ const SmarthomeNewsletterDetail = () => {
   ];
 
   return (
-    <div className="max-w-5xl mx-auto space-y-24 pt-8 md:pt-12 pb-24 text-white">
+    <div className="w-full space-y-16 pt-8 md:pt-12">
 
       {/* Hero */}
-      <div className="space-y-8">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {[
-            { val: '5호', label: '발행 완료' },
-            { val: '100%', label: '무인 파이프라인' },
-            { val: '$0', label: '운영 비용' },
-            { val: '5분', label: '주간 브리핑' },
-          ].map((s, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.1 }}
-              className="p-6 bg-white/5 rounded-3xl border border-white/5 text-center space-y-1"
-            >
-              <div className="text-3xl font-black text-blue-500">{s.val}</div>
-              <div className="text-xs opacity-40 uppercase tracking-widest">{s.label}</div>
-            </motion.div>
-          ))}
+      <div className="space-y-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div className="text-white">
+            <span className="text-blue-400 text-[10px] font-black tracking-[0.3em] uppercase mb-4 block">Smart Home Intelligence · AI-Powered · Auto-Published</span>
+            <div className="flex items-center gap-3 mb-4">
+              <span className="px-3 py-1 bg-white/10 rounded-full text-[10px] font-black text-white/40 uppercase tracking-widest">✏️ 김태현</span>
+              <span className="px-3 py-1 bg-white/10 rounded-full text-[10px] font-black text-white/40 uppercase tracking-widest">IoT기획팀</span>
+            </div>
+            <h3 className="text-5xl md:text-7xl font-serif text-white mb-8 leading-tight">수집하고,<br/>요약하고,<br/>발행하라.</h3>
+            <p className="text-white/60 text-lg leading-relaxed tracking-tight max-w-xl">
+              RSS 수집 → Claude 요약 → 이미지 매칭 → GitHub Pages 배포까지, 사람 손이 닿지 않는 완전 자동 뉴스레터. 스마트홈 업계 동향을 코웨이 IoT 관점으로 매주 정리한다.
+            </p>
+          </div>
+
+          {/* Stat Cards */}
+          <div className="grid grid-cols-2 gap-4">
+            {[
+              { label: '발행 완료', value: '5호', desc: '2026.04 창간 · 격주 발행' },
+              { label: '파이프라인 자동화', value: '100%', desc: 'RSS → 배포 전 과정 무인' },
+              { label: '월 운영 비용', value: '$0', desc: 'GitHub Pages + 무료 API' },
+              { label: '브리핑 읽기', value: '5분', desc: '핵심 기사 6건 큐레이션' },
+            ].map((stat, i) => (
+              <div key={i} className="p-6 bg-white/5 rounded-3xl border border-white/5 text-white">
+                <span className="block text-3xl font-black">{stat.value}</span>
+                <span className="text-[10px] uppercase text-blue-500 font-black tracking-widest mt-1 block">{stat.label}</span>
+                <p className="text-[10px] text-white/30 mt-2">{stat.desc}</p>
+              </div>
+            ))}
+          </div>
         </div>
-        <p className="text-lg opacity-60 leading-relaxed max-w-3xl">
-          RSS 수집 → Claude 요약 → Unsplash 이미지 매칭 → HTML 렌더링 → GitHub Pages 배포까지, 사람 손이 닿지 않는 완전 자동 뉴스레터. 스마트홈 업계 동향을 코웨이 IoT 기획 관점으로 매주 정리한다.
-        </p>
       </div>
 
       {/* Before / After */}
-      <section className="space-y-6">
+      <section className="space-y-8">
         <div className="flex items-center gap-4">
           <div className="h-px flex-1 bg-white/10" />
           <h4 className="text-sm font-black tracking-[0.2em] text-white/40 uppercase">Before / After</h4>
           <div className="h-px flex-1 bg-white/10" />
         </div>
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="p-8 bg-red-500/5 border border-red-500/20 rounded-[32px] space-y-4"
+            className="p-8 rounded-[32px] border border-red-500/20 bg-red-500/5 space-y-5 text-white"
           >
-            <span className="text-xs font-black uppercase tracking-[0.3em] text-red-400">Before</span>
-            <h4 className="text-xl font-black">수동 트렌드 탐색</h4>
-            <ul className="space-y-3 text-sm opacity-60">
+            <div className="flex items-center gap-3">
+              <span className="w-8 h-8 bg-red-500/20 text-red-400 rounded-xl flex items-center justify-center text-xs font-black">✗</span>
+              <span className="text-[10px] uppercase font-black tracking-[0.3em] text-red-400">Before</span>
+            </div>
+            <h5 className="text-xl font-black leading-tight">매주 반복되는 수동 탐색</h5>
+            <div className="space-y-3">
               {[
-                '매주 수십 개 뉴스 사이트를 일일이 방문',
-                '기사 요약·번역 수동 작업 (2시간+/주)',
-                '코웨이 관점의 시사점 도출 별도 작업',
-                '공유 문서 정리 및 배포에 추가 시간 소요',
-              ].map((t, i) => (
-                <li key={i} className="flex items-start gap-2">
-                  <span className="text-red-400 mt-0.5">✕</span>{t}
-                </li>
+                '수십 개 뉴스 사이트를 일일이 방문 (2시간+/주)',
+                '기사 요약·번역·카테고리 분류 전부 수동',
+                '코웨이 관점의 시사점 도출에 별도 시간 소요',
+                '공유 문서 정리 및 배포에 또 추가 공수',
+              ].map((item, i) => (
+                <div key={i} className="flex items-start gap-3 text-sm text-white/50 leading-relaxed tracking-tight">
+                  <span className="text-red-400 mt-0.5 shrink-0">—</span>
+                  {item}
+                </div>
               ))}
-            </ul>
+            </div>
           </motion.div>
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="p-8 bg-green-500/5 border border-green-500/20 rounded-[32px] space-y-4"
+            className="p-8 rounded-[32px] border border-green-500/20 bg-green-500/5 space-y-5 text-white"
           >
-            <span className="text-xs font-black uppercase tracking-[0.3em] text-green-400">After</span>
-            <h4 className="text-xl font-black">AI 자동 퍼블리싱</h4>
-            <ul className="space-y-3 text-sm opacity-60">
+            <div className="flex items-center gap-3">
+              <span className="w-8 h-8 bg-green-500/20 text-green-400 rounded-xl flex items-center justify-center text-xs font-black">✓</span>
+              <span className="text-[10px] uppercase font-black tracking-[0.3em] text-green-400">After</span>
+            </div>
+            <h5 className="text-xl font-black leading-tight">명령어 하나로 전 과정 완결</h5>
+            <div className="space-y-3">
               {[
                 '명령어 하나로 수집~배포 전 과정 완료',
                 'Claude가 코웨이 관점 인사이트 자동 생성',
-                'Unsplash 이미지 저작권 크레딧까지 자동 처리',
+                'Unsplash 이미지·저작권 크레딧까지 자동 처리',
                 'GitHub Pages에 즉시 발행, 공유 URL 한 줄',
-              ].map((t, i) => (
-                <li key={i} className="flex items-start gap-2">
-                  <span className="text-green-400 mt-0.5">✓</span>{t}
-                </li>
+              ].map((item, i) => (
+                <div key={i} className="flex items-start gap-3 text-sm text-white/50 leading-relaxed tracking-tight">
+                  <span className="text-green-400 mt-0.5 shrink-0">—</span>
+                  {item}
+                </div>
               ))}
-            </ul>
+            </div>
           </motion.div>
         </div>
       </section>
 
-      {/* Pipeline */}
+      {/* Build Process */}
       <section className="space-y-8">
         <div>
-          <span className="text-blue-500 font-mono text-sm uppercase tracking-[0.3em] mb-4 block">Pipeline</span>
-          <h3 className="text-4xl font-black uppercase tracking-tighter">자동화 파이프라인</h3>
+          <span className="text-blue-500 font-mono text-sm uppercase tracking-[0.3em] mb-4 block">Build Process</span>
+          <h3 className="text-4xl font-black uppercase tracking-tighter leading-tight">자동화 파이프라인</h3>
+          <p className="text-white/40 text-sm mt-2 uppercase tracking-widest font-bold">RSS 수집부터 GitHub Pages 배포까지 — 명령어 하나</p>
         </div>
         <div className="space-y-4">
           {steps.map((s, i) => (
@@ -1273,17 +1289,15 @@ const SmarthomeNewsletterDetail = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.06 }}
-              className="p-8 bg-white/5 rounded-[32px] border border-white/5 hover:border-blue-500/30 transition-all grid md:grid-cols-[120px_1fr_auto] gap-6 items-start"
+              className="p-8 bg-white/5 rounded-[32px] border border-white/5 hover:border-blue-500/30 transition-all space-y-4 text-white"
             >
-              <div className="space-y-1">
-                <span className="text-xs font-black text-blue-500 uppercase tracking-widest">{s.phase}</span>
-                <h5 className="font-black uppercase tracking-tight">{s.title}</h5>
+              <div className="flex items-center gap-3 flex-wrap">
+                <span className="px-3 py-1 bg-white/10 rounded-full text-[10px] font-black text-white/40 uppercase tracking-widest">{s.phase}</span>
+                <div className="p-1.5 px-3 bg-black/40 rounded-lg border border-white/5 font-mono text-[11px] text-white/50">{s.tool}</div>
               </div>
-              <div className="space-y-2">
-                <div className="p-2 bg-black/40 rounded-lg border border-white/5 font-mono text-[11px] text-white/50 inline-block">{s.tool}</div>
-                <p className="text-sm opacity-50 leading-relaxed">{s.desc}</p>
-              </div>
-              <div className="p-3 bg-blue-500/10 border border-blue-500/20 rounded-2xl text-[11px] text-blue-400 font-black max-w-[200px] text-right">{s.highlight}</div>
+              <h5 className="text-xl font-black uppercase tracking-tight leading-tight">{s.title}</h5>
+              <p className="text-sm text-white/50 leading-relaxed tracking-tight">{s.desc}</p>
+              <span className="text-[10px] uppercase font-bold text-blue-500 tracking-widest block">{s.highlight}</span>
             </motion.div>
           ))}
         </div>
@@ -1293,22 +1307,22 @@ const SmarthomeNewsletterDetail = () => {
       <section className="space-y-8">
         <div className="flex items-center gap-4">
           <div className="h-px flex-1 bg-white/10" />
-          <h4 className="text-sm font-black tracking-[0.2em] text-white/40 uppercase">AI Prompts</h4>
+          <h4 className="text-sm font-black tracking-[0.2em] text-white/40 uppercase">AI Prompts Used</h4>
           <div className="h-px flex-1 bg-white/10" />
         </div>
         <div className="space-y-4">
           {prompts.map((p, i) => (
-            <div key={i} className="p-6 bg-white/5 border border-white/5 rounded-[24px] space-y-3">
+            <div key={i} className="p-6 bg-white/5 border border-white/5 rounded-[24px] space-y-4 text-white">
               <div className="flex justify-between items-center">
-                <span className="text-xs font-black uppercase tracking-widest text-blue-400">{p.label}</span>
+                <span className="text-[10px] font-black uppercase tracking-widest text-blue-400">{p.label}</span>
                 <button
                   onClick={() => copyPrompt(p.text, i)}
-                  className="px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-xs font-black uppercase tracking-wider transition-colors flex items-center gap-2"
+                  className="px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-[10px] font-black uppercase tracking-widest transition-colors flex items-center gap-2"
                 >
                   {copiedIdx === i ? '✓ Copied' : 'Copy'}
                 </button>
               </div>
-              <pre className="text-[12px] opacity-50 leading-relaxed whitespace-pre-wrap font-mono">{p.text}</pre>
+              <pre className="text-[12px] text-white/40 leading-relaxed tracking-tight whitespace-pre-wrap font-mono">{p.text}</pre>
             </div>
           ))}
         </div>
@@ -1321,7 +1335,7 @@ const SmarthomeNewsletterDetail = () => {
           <h4 className="text-sm font-black tracking-[0.2em] text-white/40 uppercase">Published Issues</h4>
           <div className="h-px flex-1 bg-white/10" />
         </div>
-        <div className="grid gap-4">
+        <div className="space-y-3">
           {issues.map((iss, i) => (
             <motion.a
               key={i}
@@ -1331,49 +1345,66 @@ const SmarthomeNewsletterDetail = () => {
               initial={{ opacity: 0, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="flex items-center justify-between p-6 bg-white/5 border border-white/5 rounded-[24px] hover:border-blue-500/30 hover:bg-white/8 transition-all group"
+              className="flex items-center justify-between p-6 bg-white/5 border border-white/5 rounded-[24px] hover:border-blue-500/30 transition-all group text-white"
             >
               <div className="flex items-center gap-6">
-                <span className="text-4xl font-black text-blue-500/30 font-mono">{String(iss.no).padStart(2, '0')}</span>
+                <span className="text-4xl font-black text-blue-500/30 font-mono leading-none">{String(iss.no).padStart(2, '0')}</span>
                 <div>
-                  <p className="font-black text-sm">{iss.title}</p>
-                  <p className="text-xs opacity-40 mt-1">{iss.date.replace(/-/g, '.')}</p>
+                  <p className="font-black text-sm tracking-tight leading-snug">{iss.title}</p>
+                  <p className="text-[10px] text-white/30 mt-1 tracking-widest uppercase">{iss.date.replace(/-/g, '.')}</p>
                 </div>
               </div>
-              <ArrowUpRight size={18} className="opacity-30 group-hover:opacity-80 transition-opacity text-blue-400" />
+              <ArrowUpRight size={18} className="text-blue-400 opacity-30 group-hover:opacity-80 transition-opacity shrink-0" />
             </motion.a>
           ))}
         </div>
       </section>
 
-      {/* Tips */}
-      <section className="grid md:grid-cols-2 gap-4">
-        <div className="p-6 bg-white/5 border border-green-500/20 rounded-[24px] space-y-3">
-          <span className="text-xs font-black uppercase tracking-[0.3em] text-green-400">운영 팁</span>
-          <ul className="space-y-2 text-sm opacity-60">
-            {[
-              'Unsplash Demo 키: 50 req/h 무료, 배포 전 충분',
-              'CARDNEWS_VARIANT=b 환경변수로 A/B 테스트 가능',
-              'discover.mjs 후 수동으로 JSON 편집 가능 — 완전 자동과 수동 혼용 지원',
-            ].map((t, i) => <li key={i} className="flex gap-2"><span className="text-green-400">✓</span>{t}</li>)}
-          </ul>
+      {/* Tips & Cautions */}
+      <section className="space-y-8">
+        <div className="flex items-center gap-4">
+          <div className="h-px flex-1 bg-white/10" />
+          <h4 className="text-sm font-black tracking-[0.2em] text-white/40 uppercase">Lessons Learned</h4>
+          <div className="h-px flex-1 bg-white/10" />
         </div>
-        <div className="p-6 bg-white/5 border border-amber-500/20 rounded-[24px] space-y-3">
-          <span className="text-xs font-black uppercase tracking-[0.3em] text-amber-400">주의사항</span>
-          <ul className="space-y-2 text-sm opacity-60">
-            {[
-              '기사 수는 정확히 6건 (run.mjs 게이트 하드코딩)',
-              'Claude API 키는 .env에만 저장, 커밋 금지',
-              'RSS 피드 URL 변경 시 discover.mjs SOURCE 배열 업데이트 필요',
-            ].map((t, i) => <li key={i} className="flex gap-2"><span className="text-amber-400">!</span>{t}</li>)}
-          </ul>
+        <div className="grid md:grid-cols-2 gap-4">
+          <div className="p-6 bg-white/5 border border-green-500/20 rounded-[24px] space-y-4 text-white">
+            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-green-400">운영 팁</span>
+            <div className="space-y-3">
+              {[
+                { title: 'Unsplash Demo 키 무료', desc: '50 req/h — 6장 다운로드에 충분, 카드 등록 불필요' },
+                { title: 'Variant A/B 테스트', desc: 'CARDNEWS_VARIANT=b 환경변수로 디자인 변형 즉시 적용' },
+                { title: '수동 편집 혼용 가능', desc: 'discover.mjs 후 JSON 직접 편집 — 반자동 운영 지원' },
+              ].map((tip, i) => (
+                <div key={i} className="space-y-1">
+                  <p className="text-sm font-black tracking-tight">{tip.title}</p>
+                  <p className="text-xs text-white/40 leading-relaxed tracking-tight">{tip.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="p-6 bg-white/5 border border-amber-500/20 rounded-[24px] space-y-4 text-white">
+            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-amber-400">주의사항</span>
+            <div className="space-y-3">
+              {[
+                { title: '기사 수 6건 고정', desc: 'run.mjs 게이트에 하드코딩 — 5건·7건은 파이프라인 오류' },
+                { title: 'API 키 커밋 금지', desc: 'Claude·Unsplash 키는 .env에만 저장, .gitignore 필수' },
+                { title: 'RSS 피드 URL 관리', desc: '미디어 구조 변경 시 discover.mjs SOURCE 배열 업데이트 필요' },
+              ].map((tip, i) => (
+                <div key={i} className="space-y-1">
+                  <p className="text-sm font-black tracking-tight">{tip.title}</p>
+                  <p className="text-xs text-white/40 leading-relaxed tracking-tight">{tip.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
       {/* CTA */}
       <div className="p-12 bg-blue-600 rounded-[40px] text-center space-y-6 text-white">
-        <h4 className="text-2xl font-black uppercase tracking-tight">스마트홈 트렌드 뉴스레터 구독</h4>
-        <p className="opacity-80 max-w-2xl mx-auto leading-relaxed">
+        <h4 className="text-2xl font-black uppercase tracking-tight leading-tight">스마트홈 트렌드 뉴스레터 구독</h4>
+        <p className="opacity-80 max-w-2xl mx-auto leading-relaxed tracking-tight">
           매주 스마트홈 업계의 핵심 동향 6건을 코웨이 IoT 기획 관점으로 요약·큐레이션합니다. AI가 수집하고, 사람이 활용합니다.
         </p>
         <div className="flex justify-center gap-4 flex-wrap">
@@ -1381,16 +1412,6 @@ const SmarthomeNewsletterDetail = () => {
             className="px-8 py-4 bg-white text-blue-600 font-black uppercase tracking-widest rounded-2xl hover:bg-blue-50 transition-all flex items-center gap-3">
             뉴스레터 보기 <ArrowUpRight size={18} />
           </a>
-        </div>
-      </div>
-
-      {/* Credit */}
-      <div className="text-center space-y-2">
-        <p className="text-sm opacity-40">Built by</p>
-        <div className="inline-flex items-center gap-3 px-8 py-4 bg-white/5 rounded-2xl border border-white/5 text-white">
-          <span>🗞️ 김태현</span>
-          <span className="opacity-40">·</span>
-          <span className="opacity-60">IoT기획팀 / AI 전략</span>
         </div>
       </div>
     </div>
