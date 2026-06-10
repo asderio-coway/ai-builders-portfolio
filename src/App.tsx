@@ -1366,14 +1366,25 @@ const IoCareRoutineDetail = () => {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="rounded-[32px] overflow-hidden border border-white/10 bg-white/5"
+          className="rounded-[32px] overflow-hidden border border-white/10 bg-white/5 flex justify-center"
+          style={{ height: '615px' }}
         >
-          <iframe
-            src="https://frontend-o7bidfwcp-cs-projects-7d6234c5.vercel.app"
-            className="w-full"
-            style={{ height: '640px' }}
-            title="IoCare+ AI 루틴 프로토타입"
-          />
+          <div style={{
+            transform: 'scale(0.65)',
+            transformOrigin: 'top center',
+            width: '430px',
+            height: '930px',
+            borderRadius: '48px',
+            overflow: 'hidden',
+            border: '1px solid rgba(255,255,255,0.1)',
+            flexShrink: 0,
+          }}>
+            <iframe
+              src="https://frontend-o7bidfwcp-cs-projects-7d6234c5.vercel.app"
+              style={{ width: '430px', height: '930px', border: 'none' }}
+              title="IoCare+ AI 루틴 프로토타입"
+            />
+          </div>
         </motion.div>
         <div className="flex justify-center gap-4 flex-wrap">
           <a
@@ -1415,7 +1426,7 @@ const IoCareRoutineDetail = () => {
             <div className="space-y-3">
               {[
                 { title: '프로토타입 URL 접근', desc: 'Vercel Preview URL — 팀 계정 인증 없이 접근 가능 (Public Preview)' },
-                { title: '리포트 슬라이드', desc: '슬라이드 URL은 팀 내부 인증 필요, 아래 CTA 링크 참고' },
+                { title: '리포트 슬라이드', desc: '슬라이드 4장 — 로그인 없이 공개 접근 가능 (아래 CTA 버튼)' },
                 { title: '위치 조건 설정', desc: '"우리집" 등 위치 조건은 앱 내 주소 등록 후 선택 가능' },
               ].map((tip, i) => (
                 <div key={i} className="space-y-1">
@@ -1439,7 +1450,7 @@ const IoCareRoutineDetail = () => {
             className="px-8 py-4 bg-white text-blue-600 font-black uppercase tracking-widest rounded-2xl hover:bg-blue-50 transition-all flex items-center gap-3">
             프로토타입 체험하기 <ArrowUpRight size={18} />
           </a>
-          <a href="https://iocare-routine-report-oqzw02yjd-cs-projects-7d6234c5.vercel.app/" target="_blank" rel="noopener noreferrer"
+          <a href="https://asderio-coway.github.io/coway-smarthome-trend/slides/iocare-routine.html" target="_blank" rel="noopener noreferrer"
             className="px-8 py-4 bg-white/10 text-white font-black uppercase tracking-widest rounded-2xl hover:bg-white/20 transition-all border border-white/20 flex items-center gap-3">
             리포트 슬라이드 <ArrowUpRight size={18} />
           </a>

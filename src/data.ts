@@ -73,16 +73,6 @@ export const PROJECTS: Project[] = [
     image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=1000'
   },
   {
-    id: 'p3',
-    title: 'IoCare+ AI Routine 2.0',
-    category: 'Smart Home',
-    description: '사용자 생활 패턴을 학습하여 정수기, 공기청정기 등의 루틴을 선제적으로 제안하는 고도화 엔진.',
-    impact: '사용자 루틴 설정 성공률 85% 달성',
-    members: ['yn_choi_iot', 'hn_choi'],
-    details: ['Pattern Recognition', 'User Feedback Loop', 'Device Synchronization'],
-    image: 'https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&q=80&w=1000'
-  },
-  {
     id: 'p4',
     title: 'AI-Ready Spec Bot',
     category: 'AI Blueprint',
