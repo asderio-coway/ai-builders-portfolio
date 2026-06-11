@@ -1358,16 +1358,12 @@ const GWSCLIDetail = () => {
       <div className="p-12 bg-blue-600 rounded-[40px] text-center space-y-6 text-white">
         <h4 className="text-2xl font-black uppercase tracking-tight leading-tight">6개 서비스, 하나의 터미널</h4>
         <p className="opacity-80 max-w-2xl mx-auto leading-relaxed tracking-tight">
-          Gmail·Jira·Confluence·Sheets·Claude·AntiGravity — 연결 가능한 모든 것을 연결해 팀 전체를 AI Native로. WQA 대시보드에서 실제 운영 결과를 확인하세요.
+          Gmail·Jira·Confluence·Sheets·Claude·AntiGravity — 연결 가능한 모든 것을 연결해 팀 전체를 AI Native로. 프로젝트 브리핑에서 자동화 파이프라인 전체를 확인하세요.
         </p>
         <div className="flex justify-center gap-4 flex-wrap">
-          <a href="https://coway-wqa-monitor-dashboard.asderio.workers.dev/" target="_blank" rel="noopener noreferrer"
-            className="px-8 py-4 bg-white text-blue-600 font-black uppercase tracking-widest rounded-2xl hover:bg-blue-50 transition-all flex items-center gap-3">
-            WQA 대시보드 보기 <ArrowUpRight size={18} />
-          </a>
           <a href="https://asderio-coway.github.io/coway-smarthome-trend/slides/gws-cli-brief.html" target="_blank" rel="noopener noreferrer"
-            className="px-8 py-4 bg-white/10 text-white font-black uppercase tracking-widest rounded-2xl hover:bg-white/20 transition-all border border-white/20 flex items-center gap-3">
-            프로젝트 브리핑 <ArrowUpRight size={18} />
+            className="px-8 py-4 bg-white text-blue-600 font-black uppercase tracking-widest rounded-2xl hover:bg-blue-50 transition-all flex items-center gap-3">
+            프로젝트 브리핑 보기 <ArrowUpRight size={18} />
           </a>
         </div>
       </div>

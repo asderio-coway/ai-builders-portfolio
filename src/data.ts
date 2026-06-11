@@ -56,7 +56,7 @@ export const PROJECTS: Project[] = [
       '자동화 체인: 수신 메일 → AI 분류 → Jira 이슈 → 자동 응답 → Sheets 기록 → 알림',
       'IoT기획팀 AI Native: 9인 팀원 전원이 터미널·IDE에서 동일 자동화 도구 사용',
     ],
-    link: 'https://coway-wqa-monitor-dashboard.asderio.workers.dev/',
+    link: 'https://asderio-coway.github.io/coway-smarthome-trend/slides/gws-cli-brief.html',
     image: 'https://images.unsplash.com/photo-1664575602276-acd073f104c1?auto=format&fit=crop&q=80&w=1000'
   },
   {
