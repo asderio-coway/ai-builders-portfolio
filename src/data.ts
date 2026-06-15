@@ -171,4 +171,20 @@ export const PROJECTS: Project[] = [
     ],
     image: 'https://images.unsplash.com/photo-1618788372246-79faff0c3742?auto=format&fit=crop&q=80&w=1000',
   },
+  {
+    id: 'p12',
+    title: 'WeMention — WeChat 멘션을 놓치지 않게, AI 브리핑으로',
+    category: 'Work Ops',
+    description: 'macOS WeChat 데스크톱 앱에서 받은 @멘션을 자동 수집·저장하고, AI가 내용 요약과 긴급도를 분류해 놓치기 쉬운 중요 멘션을 브리핑 큐로 정리해 주는 Tauri 데스크톱 운영 도구.',
+    impact: '흩어진 WeChat 멘션 누락 방지 · 중요 메시지 대응 우선순위 자동화',
+    members: ['yn_choi_iot'],
+    details: [
+      'wechat-mcp 기반 채팅방 최근 메시지 수집 — @멘션만 추출',
+      'AI 요약·긴급도 분류 (Claude CLI · Anthropic API · Gemini API)',
+      '로컬 SQLite + FTS5 저장 — 브리핑 큐·읽음 처리 관리',
+      '자동 스캔 주기·메시지 수·시간 범위 운영 설정',
+      'Tauri 2 + Rust + React 19 데스크톱 앱',
+    ],
+    image: 'https://images.unsplash.com/photo-1611606063065-ee7946f0787a?auto=format&fit=crop&q=80&w=1000',
+  },
 ];
