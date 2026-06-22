@@ -1099,6 +1099,266 @@ const CodepopDetail = () => {
   );
 };
 
+// --- WeMention Detail ---
+const WeMentionDetail = () => {
+  return (
+    <div className="w-full space-y-16 pt-8 md:pt-12">
+      {/* Hero */}
+      <div className="space-y-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div className="text-white">
+            <div className="flex items-center gap-3 mb-4">
+              <span className="text-blue-400 text-[10px] font-black tracking-[0.3em] uppercase">WeChat Mention Companion · Local-first · Tauri Desktop</span>
+            </div>
+            <div className="flex items-center gap-3 mb-2">
+              <span className="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-[10px] font-bold text-white/40 uppercase tracking-widest">✏️ 최유나</span>
+              <span className="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-[10px] font-bold text-white/40 uppercase tracking-widest">🏠 본사 AI Builders</span>
+            </div>
+            <h3 className="text-5xl md:text-7xl font-serif text-white mb-8 leading-tight mt-4">흘려보낸 멘션을,<br/>아침 브리핑으로.</h3>
+            <p className="text-white/60 text-lg leading-relaxed max-w-xl">
+              중국 협력사와의 WeChat 단체방은 메시지가 끝없이 쌓입니다. 그 속에서 <em className="text-white/80 not-italic font-bold">나를 부른 @멘션</em>만 골라, AI가 요약하고 긴급도를 분류해 <em className="text-white/80 not-italic font-bold">결정·할 일·미결 사항</em>으로 정리합니다. macOS 데스크톱에서 로컬로, 매일 아침 브리핑처럼.
+            </p>
+            <div className="mt-10 flex flex-wrap gap-3">
+              <span className="px-5 py-3 bg-white/5 border border-white/10 rounded-2xl text-white/50 text-[11px] font-black uppercase tracking-widest flex items-center gap-2">
+                🔒 사내 비공개 프로젝트 · v0.1.0
+              </span>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            {([
+              { label: "AI 엔진", value: "3종", desc: "Claude · Anthropic · Gemini" },
+              { label: "수집", value: "@멘션", desc: "wechat-mcp 자동 스캔" },
+              { label: "저장", value: "로컬", desc: "SQLite + FTS5" },
+              { label: "플랫폼", value: "macOS", desc: "Tauri 2 · Rust" },
+            ] as const).map((stat, i) => (
+              <div key={i} className="p-6 bg-white/5 rounded-3xl border border-white/5 text-white">
+                <span className="block text-3xl font-black">{stat.value}</span>
+                <span className="text-[10px] uppercase text-blue-500 font-black tracking-widest mt-1 block">{stat.label}</span>
+                <p className="text-[10px] text-white/30 mt-2">{stat.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Hero screenshot */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="relative rounded-[40px] overflow-hidden border border-white/10 shadow-2xl shadow-blue-500/10 bg-zinc-900 flex flex-col items-center justify-center p-6 md:p-12 gap-6"
+        >
+          <img
+            src={asset('assets/wemention.jpg')}
+            alt="WeMention 대시보드 — 방별 요약과 @멘션 토픽 브리핑"
+            className="w-full rounded-2xl shadow-2xl border border-white/10"
+            onError={(e) => { (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1611606063065-ee7946f0787a?auto=format&fit=crop&q=80&w=1000'; }}
+          />
+          <div className="flex items-center gap-3 text-white/30 text-xs font-mono uppercase tracking-widest text-center">
+            <span className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" />
+            방별 요약 · 브리핑 인박스 · @멘션 토픽 요약을 한 화면에서
+          </div>
+        </motion.div>
+      </div>
+
+      {/* Problem / Solution */}
+      <section className="space-y-8">
+        <div className="flex items-center gap-4">
+          <div className="h-px flex-1 bg-white/10" />
+          <h4 className="text-sm font-black tracking-[0.2em] text-white/40 uppercase">Problem / Solution</h4>
+          <div className="h-px flex-1 bg-white/10" />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="p-8 rounded-[32px] border border-red-500/20 bg-red-500/5 space-y-5 text-white"
+          >
+            <div className="flex items-center gap-3">
+              <span className="w-8 h-8 bg-red-500/20 text-red-400 rounded-xl flex items-center justify-center text-xs font-black">✗</span>
+              <span className="text-[10px] uppercase font-black tracking-[0.3em] text-red-400">Before</span>
+            </div>
+            <h5 className="text-xl font-black">묻혀버리는 멘션</h5>
+            <div className="space-y-3">
+              {[
+                "협력사 WeChat 단체방은 하루에도 수백 개 메시지 — 나를 부른 멘션이 흐름에 묻힘",
+                "중국어 메시지라 핵심을 파악하는 데 시간이 걸림",
+                "무엇이 결정됐고 내가 뭘 해야 하는지 매번 스크롤로 되짚어야 함",
+                "놓친 멘션 = 협업 누락 · 대응 지연",
+              ].map((item, i) => (
+                <div key={i} className="flex items-start gap-3 text-sm text-white/50">
+                  <span className="text-red-400 mt-0.5 shrink-0">—</span>
+                  {item}
+                </div>
+              ))}
+            </div>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="p-8 rounded-[32px] border border-green-500/20 bg-green-500/5 space-y-5 text-white"
+          >
+            <div className="flex items-center gap-3">
+              <span className="w-8 h-8 bg-green-500/20 text-green-400 rounded-xl flex items-center justify-center text-xs font-black">✓</span>
+              <span className="text-[10px] uppercase font-black tracking-[0.3em] text-green-400">After</span>
+            </div>
+            <h5 className="text-xl font-black">멘션만 골라, 구조화된 브리핑</h5>
+            <div className="space-y-3">
+              {[
+                "@멘션만 자동 수집 — 수백 개 메시지에서 노이즈를 걷어냄",
+                "AI가 요약 + 긴급도 분류 → 결정·할 일·미결 사항으로 구조화",
+                "방별 요약 / 브리핑 인박스 두 뷰로 한눈에 파악",
+                "한↔영 번역 송신으로 그 자리에서 바로 응답",
+              ].map((item, i) => (
+                <div key={i} className="flex items-start gap-3 text-sm text-white/50">
+                  <span className="text-green-400 mt-0.5 shrink-0">+</span>
+                  {item}
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* How it works */}
+      <section className="space-y-8 text-white">
+        <div className="flex items-center gap-4">
+          <div className="h-px flex-1 bg-white/10" />
+          <h4 className="text-sm font-black tracking-[0.2em] opacity-40 uppercase">How it works</h4>
+          <div className="h-px flex-1 bg-white/10" />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {([
+            { step: "01", icon: <Search size={20} />, title: "멘션 수집", desc: "wechat-mcp로 등록된 채팅방의 최근 메시지를 스캔하고, @멘션 태그가 붙은 항목만 추려 로컬 DB에 저장합니다." },
+            { step: "02", icon: <Zap size={20} />, title: "AI 브리핑", desc: "Claude·Anthropic·Gemini 중 선택한 엔진이 멘션을 요약하고 긴급도를 분류 — 결정된 것·할 일·미결 사항으로 구조화합니다." },
+            { step: "03", icon: <Globe size={20} />, title: "처리 · 응답", desc: "브리핑 인박스에서 읽음 처리하고, 한↔영 번역으로 답신까지 한 화면에서 끝냅니다." },
+          ] as const).map((item, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.1 }}
+              className="p-8 glass rounded-[32px] border border-white/5 text-center space-y-4 hover:border-blue-500/30 transition-all group"
+            >
+              <div className="w-14 h-14 bg-blue-600/10 text-blue-400 rounded-2xl flex items-center justify-center mx-auto group-hover:bg-blue-600 group-hover:text-white transition-all">
+                {item.icon}
+              </div>
+              <span className="text-[10px] font-black text-blue-500/40 uppercase tracking-widest block">{item.step}</span>
+              <h5 className="font-black tracking-tight text-lg">{item.title}</h5>
+              <p className="text-xs opacity-40 leading-relaxed">{item.desc}</p>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* Screens Gallery */}
+      <section className="space-y-8">
+        <div className="text-white">
+          <span className="text-blue-500 font-mono text-sm uppercase tracking-[0.3em] mb-4 block">Screens</span>
+          <h3 className="text-4xl font-black uppercase tracking-tighter">화면으로 보기</h3>
+          <p className="text-white/40 text-sm mt-2 uppercase tracking-widest font-bold">실제 운영 화면 — 브리핑부터 설정까지</p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {([
+            { src: 'assets/wemention_2.jpg', title: '방별 멘션 브리핑', desc: '1·3·7일·1개월 기간별로 멘션을 모아 긴급도와 함께 확인' },
+            { src: 'assets/wemention_5.jpg', title: '브리핑 인박스', desc: '모든 방의 멘션 브리핑을 한 곳에 모아 읽고 완료 처리' },
+            { src: 'assets/wemention_3.jpg', title: '운영 설정', desc: '멘션 태그 · AI 제공자 · 모델 · 자동 스캔 주기 · 아카이브 기준' },
+            { src: 'assets/wemention_4.jpg', title: '내장 설치 가이드', desc: 'Claude CLI · wechat-mcp 셋업을 단계별로 안내' },
+          ] as const).map((shot, i) => (
+            <motion.figure
+              key={i}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.08 }}
+              viewport={{ once: true }}
+              className="group rounded-[28px] overflow-hidden border border-white/10 bg-zinc-900"
+            >
+              <div className="overflow-hidden">
+                <img
+                  src={asset(shot.src)}
+                  alt={shot.title}
+                  className="w-full group-hover:scale-[1.02] transition-transform duration-700"
+                  loading="lazy"
+                />
+              </div>
+              <figcaption className="p-6 border-t border-white/5">
+                <h5 className="font-black text-white tracking-tight">{shot.title}</h5>
+                <p className="text-xs text-white/40 mt-1 leading-relaxed">{shot.desc}</p>
+              </figcaption>
+            </motion.figure>
+          ))}
+        </div>
+      </section>
+
+      {/* Key Features */}
+      <section className="space-y-8 border-t border-white/5 pt-12">
+        <div className="text-white">
+          <span className="text-blue-500 font-mono text-sm uppercase tracking-[0.3em] mb-4 block">Capabilities</span>
+          <h3 className="text-4xl font-black uppercase tracking-tighter">핵심 기능</h3>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-white">
+          {([
+            { icon: <MessageSquare size={18} />, title: "멘션 자동 수집", desc: "@Y 등 지정 태그가 붙은 메시지만 골라 수집. 단체방 노이즈를 제거합니다." },
+            { icon: <CheckCircle2 size={18} />, title: "구조화 브리핑", desc: "결정된 것 · 할 일 · 미결 사항으로 나눠 한눈에 파악." },
+            { icon: <Zap size={18} />, title: "긴급도 분류", desc: "AI가 멘션의 시급함을 판단해 우선순위를 매깁니다." },
+            { icon: <Layout size={18} />, title: "두 가지 뷰", desc: "방별 요약과 브리핑 인박스 — 상황에 맞게 전환." },
+            { icon: <Globe size={18} />, title: "한↔영 번역 송신", desc: "한국어로 쓰면 영어로 번역해 그 자리에서 답신." },
+            { icon: <Search size={18} />, title: "운영 설정", desc: "멘션 태그 · AI 모델 · 자동 스캔 주기 · 아카이브 기준을 직접 조정." },
+          ] as const).map((f, i) => (
+            <div key={i} className="p-6 bg-white/5 rounded-3xl border border-white/5 space-y-3 hover:border-blue-500/30 transition-all">
+              <div className="w-11 h-11 bg-blue-600/10 text-blue-400 rounded-2xl flex items-center justify-center">{f.icon}</div>
+              <h5 className="font-black tracking-tight">{f.title}</h5>
+              <p className="text-xs text-white/40 leading-relaxed">{f.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Tech Stack */}
+      <section className="space-y-8 border-t border-white/5 pt-12">
+        <div className="text-white">
+          <span className="text-blue-500 font-mono text-sm uppercase tracking-[0.3em] mb-4 block">Technology</span>
+          <h3 className="text-4xl font-black uppercase tracking-tighter">Tech Stack</h3>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-white">
+          {([
+            { name: 'React 19 + TS', pct: 'Frontend', desc: 'Vite 기반 운영 대시보드 UI', gradient: 'from-blue-600 to-cyan-600' },
+            { name: 'Tauri 2', pct: 'Desktop', desc: '웹뷰 + 네이티브 브리지', gradient: 'from-yellow-600 to-amber-600' },
+            { name: 'Rust', pct: 'Backend', desc: '멘션 수집·브리핑 코어 로직', gradient: 'from-orange-600 to-red-700' },
+            { name: 'SQLite + FTS5', pct: 'Storage', desc: '로컬 저장 · 전문 검색', gradient: 'from-green-600 to-emerald-600' },
+          ] as const).map((tech, i) => (
+            <div key={i} className="p-6 bg-white/5 rounded-3xl border border-white/5 space-y-3">
+              <div className={`h-1 rounded-full bg-gradient-to-r ${tech.gradient}`} />
+              <div>
+                <span className="font-black text-lg">{tech.name}</span>
+                <span className="block text-[10px] text-blue-500 font-black tracking-widest mt-1">{tech.pct}</span>
+              </div>
+              <p className="text-[10px] text-white/30 leading-relaxed">{tech.desc}</p>
+            </div>
+          ))}
+        </div>
+        <p className="text-xs text-white/30 leading-relaxed">
+          MCP 어댑터 <span className="text-white/50 font-mono">wechat-mcp</span> 로 WeChat 데스크톱과 연동하고, LLM은 <span className="text-white/50">Claude CLI · Anthropic API · Gemini API</span> 중 선택해 사용합니다. 모든 데이터는 로컬에 저장되는 local-first 구조입니다.
+        </p>
+      </section>
+
+      {/* Closing */}
+      <div className="p-12 bg-blue-600 rounded-[40px] text-center space-y-6 text-white">
+        <h4 className="text-2xl font-black uppercase tracking-tight">놓치지 않는 협업</h4>
+        <p className="opacity-80 max-w-2xl mx-auto leading-relaxed">
+          코웨이 IoT기획팀 최유나가 본사 AI Builders 과정에서 만든 사내 운영 도구입니다. 끝없이 흐르는 협력사 WeChat에서 '나를 부른 멘션'만 골라, 매일 아침 브리핑으로 정리합니다. macOS · 로컬 우선.
+        </p>
+        <div className="flex justify-center gap-3 flex-wrap">
+          <span className="px-6 py-3 bg-white/10 text-white font-black uppercase tracking-widest rounded-2xl border border-white/20 flex items-center gap-2 text-xs">
+            🔒 사내 비공개 · v0.1.0
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // --- GWS CLI & Jira Automation Detail ---
 const GWSCLIDetail = () => {
   const [copiedIdx, setCopiedIdx] = useState<number | null>(null);
@@ -2404,6 +2664,8 @@ const ProjectDetailModal = ({ project, onClose }: { project: Project | null, onC
             <IoCareRoutineDetail />
           ) : project.id === 'p1' ? (
             <GWSCLIDetail />
+          ) : project.id === 'p12' ? (
+            <WeMentionDetail />
           ) : (
             <div className="max-w-4xl mx-auto space-y-12 pt-8 md:pt-12 pb-24 text-white">
               <div className="aspect-video w-full rounded-[32px] overflow-hidden bg-white/5 border border-white/10">
@@ -2635,6 +2897,7 @@ const WorkDetailPage = () => {
     if (project.id === 'p10') return <SmarthomeNewsletterDetail />;
     if (project.id === 'p11') return <IoCareRoutineDetail />;
     if (project.id === 'p1') return <GWSCLIDetail />;
+    if (project.id === 'p12') return <WeMentionDetail />;
     return (
       <div className="max-w-4xl mx-auto space-y-12 pt-8 md:pt-12 pb-24 text-white">
         <div className="aspect-video w-full rounded-[32px] overflow-hidden bg-white/5 border border-white/10">
