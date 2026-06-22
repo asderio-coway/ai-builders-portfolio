@@ -179,12 +179,12 @@ export const PROJECTS: Project[] = [
     impact: '흩어진 WeChat 멘션 누락 방지 · 중요 메시지 대응 우선순위 자동화',
     members: ['yn_choi_iot'],
     details: [
-      'wechat-mcp 기반 채팅방 최근 메시지 수집 — @멘션만 추출',
-      'AI 요약·긴급도 분류 (Claude CLI · Anthropic API · Gemini API)',
-      '로컬 SQLite + FTS5 저장 — 브리핑 큐·읽음 처리 관리',
-      '자동 스캔 주기·메시지 수·시간 범위 운영 설정',
-      'Tauri 2 + Rust + React 19 데스크톱 앱',
+      'wechat-mcp 기반 채팅방 메시지 수집 — @멘션만 추출',
+      'AI 요약·긴급도 분류 후 결정·할 일·미결 사항 구조화 브리핑',
+      '한↔영 메시지 번역 송신 · 방별 요약 / 브리핑 인박스 뷰',
+      '로컬 SQLite + FTS5 저장 · 자동 스캔 주기 운영 설정',
+      'Tauri 2 + Rust + React 19 데스크톱 앱 (Claude/Anthropic/Gemini)',
     ],
-    image: 'https://images.unsplash.com/photo-1611606063065-ee7946f0787a?auto=format&fit=crop&q=80&w=1000',
+    image: '/ai-builders-portfolio/assets/wemention.jpg',
   },
 ];
