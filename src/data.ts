@@ -10,6 +10,7 @@ export interface Member {
 export interface Project {
   id: string;
   title: string;
+  titleLines?: string[]; // 전용 페이지 배너 제목 줄바꿈 (없으면 title 사용)
   category: 'Work Ops' | 'Workspace' | 'Smart Home' | 'AI Blueprint' | 'Global Intel';
   description: string;
   impact: string;
@@ -174,6 +175,7 @@ export const PROJECTS: Project[] = [
   {
     id: 'p12',
     title: 'WeMention — WeChat 멘션을 놓치지 않게, AI 브리핑으로',
+    titleLines: ['WeMention', 'WeChat 멘션을 놓치지 않게,', 'AI 브리핑으로'],
     category: 'Work Ops',
     description: 'macOS WeChat 데스크톱 앱에서 받은 @멘션을 자동 수집·저장하고, AI가 내용 요약과 긴급도를 분류해 놓치기 쉬운 중요 멘션을 브리핑 큐로 정리해 주는 Tauri 데스크톱 운영 도구.',
     impact: '흩어진 WeChat 멘션 누락 방지 · 중요 메시지 대응 우선순위 자동화',

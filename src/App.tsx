@@ -2989,8 +2989,10 @@ const WorkDetailPage = () => {
       <div className="relative px-6 md:px-12 pt-12 pb-8 max-w-7xl mx-auto">
         <div className="flex items-start justify-between gap-8 flex-wrap">
           <div>
-            <h1 className="text-4xl md:text-7xl font-black tracking-tighter uppercase leading-none text-white mb-4">
-              {project.title}
+            <h1 className={`font-black tracking-tighter uppercase leading-none text-white mb-4 ${project.titleLines ? 'text-4xl md:text-6xl' : 'text-4xl md:text-7xl'}`}>
+              {project.titleLines
+                ? project.titleLines.map((line, i) => <span key={i} className="block">{line}</span>)
+                : project.title}
             </h1>
             <p className="text-white/40 text-lg max-w-2xl leading-relaxed">{project.description}</p>
           </div>
